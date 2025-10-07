@@ -1,0 +1,35 @@
+---
+- name: Mac Setup Automation
+  hosts: localhost
+  gather_facts: yes
+  vars:
+    user_home: "{{ ansible_env.HOME }}"
+    
+  tasks:
+    - name: Include Homebrew tasks
+      include_tasks: tasks/homebrew.yml
+      tags: [homebrew, apps]
+    
+    - name: Include application tasks
+      include_tasks: tasks/applications.yml
+      tags: [apps]
+    
+    - name: Include system preferences tasks
+      include_tasks: tasks/system_preferences.yml
+      tags: [system, preferences]
+    
+    - name: Include Dock configuration tasks
+      include_tasks: tasks/dock.yml
+      tags: [dock]
+    
+    - name: Include shell environment tasks
+      include_tasks: tasks/shell_environment.yml
+      tags: [shell, environment]
+    
+    - name: Include additional CLI tools tasks
+      include_tasks: tasks/additional_cli_tools.yml
+      tags: [cli, tools, additional]
+    
+    - name: Include fonts and terminal configuration tasks
+      include_tasks: tasks/fonts_and_terminals.yml
+      tags: [fonts, terminals, iterm, ghostty]

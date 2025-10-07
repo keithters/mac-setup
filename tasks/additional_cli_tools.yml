@@ -1,0 +1,106 @@
+---
+- name: Install Docker CLI tools
+  get_url:
+    url: "{{ item.url }}"
+    dest: "/usr/local/bin/{{ item.name }}"
+    mode: '0755'
+  loop:
+    - { name: "docker-compose", url: "https://github.com/docker/compose/releases/latest/download/docker-compose-darwin-x86_64" }
+  when: ansible_architecture == "x86_64"
+
+- name: Install Docker CLI tools (ARM64)
+  get_url:
+    url: "{{ item.url }}"
+    dest: "/usr/local/bin/{{ item.name }}"
+    mode: '0755'
+  loop:
+    - { name: "docker-compose", url: "https://github.com/docker/compose/releases/latest/download/docker-compose-darwin-aarch64" }
+  when: ansible_architecture == "arm64"
+
+- name: Install Kubernetes CLI (kubectl)
+  get_url:
+    url: "https://dl.k8s.io/release/{{ kubectl_version | default('stable') }}/bin/darwin/{{ 'arm64' if ansible_architecture == 'arm64' else 'amd64' }}/kubectl"
+    dest: "/usr/local/bin/kubectl"
+    mode: '0755'
+
+- name: Install global npm packages
+  npm:
+    name: "{{ item }}"
+    global: yes
+    state: present
+  loop:
+    - corepack
+  ignore_errors: yes
+
+- name: Install 1Password CLI
+  get_url:
+    url: "https://cache.agilebits.com/dist/1P/op2/pkg/v{{ op_version | default('2.32.0') }}/op_darwin_{{ 'arm64' if ansible_architecture == 'arm64' else 'amd64' }}_v{{ op_version | default('2.32.0') }}.zip"
+    dest: "/tmp/op.zip"
+    mode: '0644'
+
+- name: Extract 1Password CLI
+  unarchive:
+    src: "/tmp/op.zip"
+    dest: "/usr/local/bin/"
+    remote_src: yes
+    mode: '0755'
+    creates: "/usr/local/bin/op"
+
+- name: Clean up 1Password CLI download
+  file:
+    path: "/tmp/op.zip"
+    state: absent
+
+- name: Install Python packages via uv (if available)
+  shell: "{{ ansible_env.HOME }}/.local/bin/uv tool install {{ item }}"
+  loop:
+    - ruff
+    - black
+    - mypy
+  ignore_errors: yes
+
+- name: Install Python packages via pipx (fallback)
+  shell: "pipx install {{ item }}"
+  loop:
+    - ruff
+    - black
+    - mypy
+  when: ansible_env.HOME + "/.local/bin/uv" is not exists
+  ignore_errors: yes
+
+- name: Ensure command line tools are in PATH
+  blockinfile:
+    path: "{{ user_home }}/.zshrc"
+    marker: "# {mark} ANSIBLE MANAGED CLI TOOLS PATH"
+    block: |
+      # Additional CLI tools paths
+      export PATH="/usr/local/bin:$PATH"
+      export PATH="$HOME/.local/bin:$PATH"
+      
+      # Docker completion (if available)
+      if command -v docker &> /dev/null; then
+        autoload -U +X bashcompinit && bashcompinit
+        complete -o default -F __start_docker docker 2>/dev/null || true
+      fi
+      
+      # Kubectl completion (if available)
+      if command -v kubectl &> /dev/null; then
+        source <(kubectl completion zsh) 2>/dev/null || true
+      fi
+      
+      # 1Password CLI completion (if available)
+      if command -v op &> /dev/null; then
+        eval "$(op completion zsh)" 2>/dev/null || true
+      fi
+
+- name: Create symlinks for CLI tools installed via GUI apps
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    force: yes
+  loop:
+    - { src: "/Applications/Cursor.app/Contents/Resources/app/bin/cursor", dest: "/usr/local/bin/cursor" }
+    - { src: "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code", dest: "/usr/local/bin/code" }
+    - { src: "/Applications/Ghostty.app/Contents/MacOS/ghostty", dest: "/usr/local/bin/ghostty" }
+  ignore_errors: yes

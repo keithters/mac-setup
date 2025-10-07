@@ -1,0 +1,107 @@
+---
+- name: Set system preferences
+  osx_defaults:
+    domain: "{{ item.domain }}"
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+  loop:
+    # Finder preferences
+    - { domain: "com.apple.finder", key: "AppleShowAllFiles", type: "bool", value: true }
+    - { domain: "com.apple.finder", key: "ShowPathbar", type: "bool", value: true }
+    - { domain: "com.apple.finder", key: "ShowStatusBar", type: "bool", value: true }
+    - { domain: "com.apple.finder", key: "FXDefaultSearchScope", type: "string", value: "SCcf" }
+    - { domain: "com.apple.finder", key: "NewWindowTarget", type: "string", value: "PfHm" }  # Home folder
+    - { domain: "com.apple.finder", key: "FXPreferredViewStyle", type: "string", value: "Nlsv" }  # List view
+    - { domain: "com.apple.finder", key: "FXEnableExtensionChangeWarning", type: "bool", value: false }
+    - { domain: "com.apple.finder", key: "_FXShowPosixPathInTitle", type: "bool", value: true }
+    
+    # Desktop & Screen Saver preferences
+    - { domain: "com.apple.screensaver", key: "askForPassword", type: "int", value: 1 }
+    - { domain: "com.apple.screensaver", key: "askForPasswordDelay", type: "int", value: 0 }
+    - { domain: "com.apple.finder", key: "ShowExternalHardDrivesOnDesktop", type: "bool", value: true }
+    - { domain: "com.apple.finder", key: "ShowHardDrivesOnDesktop", type: "bool", value: false }
+    - { domain: "com.apple.finder", key: "ShowMountedServersOnDesktop", type: "bool", value: true }
+    - { domain: "com.apple.finder", key: "ShowRemovableMediaOnDesktop", type: "bool", value: true }
+    
+    # Dock preferences
+    - { domain: "com.apple.dock", key: "autohide", type: "bool", value: false }
+    - { domain: "com.apple.dock", key: "tilesize", type: "int", value: 48 }
+    - { domain: "com.apple.dock", key: "minimize-to-application", type: "bool", value: true }
+    - { domain: "com.apple.dock", key: "show-recents", type: "bool", value: false }
+    - { domain: "com.apple.dock", key: "magnification", type: "bool", value: false }
+    - { domain: "com.apple.dock", key: "orientation", type: "string", value: "bottom" }
+    - { domain: "com.apple.dock", key: "mineffect", type: "string", value: "genie" }
+    - { domain: "com.apple.dock", key: "launchanim", type: "bool", value: true }
+    
+    # Trackpad preferences
+    - { domain: "com.apple.driver.AppleBluetoothMultitouch.trackpad", key: "Clicking", type: "bool", value: true }
+    - { domain: "com.apple.AppleMultitouchTrackpad", key: "Clicking", type: "bool", value: true }
+    - { domain: "com.apple.driver.AppleBluetoothMultitouch.trackpad", key: "TrackpadThreeFingerDrag", type: "bool", value: true }
+    - { domain: "com.apple.AppleMultitouchTrackpad", key: "TrackpadThreeFingerDrag", type: "bool", value: true }
+    
+    # Keyboard preferences
+    - { domain: "NSGlobalDomain", key: "KeyRepeat", type: "int", value: 2 }
+    - { domain: "NSGlobalDomain", key: "InitialKeyRepeat", type: "int", value: 15 }
+    - { domain: "NSGlobalDomain", key: "NSAutomaticSpellingCorrectionEnabled", type: "bool", value: false }
+    - { domain: "NSGlobalDomain", key: "NSAutomaticCapitalizationEnabled", type: "bool", value: false }
+    - { domain: "NSGlobalDomain", key: "NSAutomaticPeriodSubstitutionEnabled", type: "bool", value: false }
+    
+    # Global UI preferences
+    - { domain: "NSGlobalDomain", key: "AppleShowScrollBars", type: "string", value: "WhenScrolling" }
+    - { domain: "NSGlobalDomain", key: "NSScrollAnimationEnabled", type: "bool", value: false }
+    - { domain: "NSGlobalDomain", key: "NSWindowResizeTime", type: "float", value: 0.001 }
+    - { domain: "NSGlobalDomain", key: "QLPanelAnimationDuration", type: "float", value: 0 }
+    - { domain: "NSGlobalDomain", key: "NSNavPanelExpandedStateForSaveMode", type: "bool", value: true }
+    - { domain: "NSGlobalDomain", key: "NSNavPanelExpandedStateForSaveMode2", type: "bool", value: true }
+    - { domain: "NSGlobalDomain", key: "PMPrintingExpandedStateForPrint", type: "bool", value: true }
+    - { domain: "NSGlobalDomain", key: "PMPrintingExpandedStateForPrint2", type: "bool", value: true }
+    
+    # Menu bar preferences
+    - { domain: "com.apple.menuextra.clock", key: "DateFormat", type: "string", value: "EEE MMM d  h:mm:ss a" }
+    - { domain: "com.apple.menuextra.battery", key: "ShowPercent", type: "bool", value: true }
+    
+    # Screenshot preferences
+    - { domain: "com.apple.screencapture", key: "location", type: "string", value: "{{ user_home }}/Desktop" }
+    - { domain: "com.apple.screencapture", key: "type", type: "string", value: "png" }
+    - { domain: "com.apple.screencapture", key: "disable-shadow", type: "bool", value: false }
+    
+    # Safari preferences
+    - { domain: "com.apple.Safari", key: "IncludeInternalDebugMenu", type: "bool", value: true }
+    - { domain: "com.apple.Safari", key: "IncludeDevelopMenu", type: "bool", value: true }
+    - { domain: "com.apple.Safari", key: "WebKitDeveloperExtrasEnabledPreferenceKey", type: "bool", value: true }
+    - { domain: "com.apple.Safari", key: "ShowFavoritesBar", type: "bool", value: true }
+    
+    # Activity Monitor preferences
+    - { domain: "com.apple.ActivityMonitor", key: "OpenMainWindow", type: "bool", value: true }
+    - { domain: "com.apple.ActivityMonitor", key: "IconType", type: "int", value: 5 }
+    - { domain: "com.apple.ActivityMonitor", key: "SortColumn", type: "string", value: "CPUUsage" }
+    - { domain: "com.apple.ActivityMonitor", key: "SortDirection", type: "int", value: 0 }
+
+- name: Set default browser (requires manual confirmation in System Preferences)
+  shell: |
+    # This will prompt user to confirm default browser change
+    python3 -c "
+    import subprocess
+    import sys
+    try:
+        # Check if Firefox is installed
+        result = subprocess.run(['mdfind', 'kMDItemCFBundleIdentifier == org.mozilla.firefox'], 
+                              capture_output=True, text=True)
+        if result.stdout.strip():
+            print('Firefox found, you can set it as default browser in System Preferences > General > Default web browser')
+        else:
+            print('Firefox not found, keeping current default browser')
+    except Exception as e:
+        print(f'Could not check for Firefox: {e}')
+    "
+  ignore_errors: yes
+
+- name: Restart affected services
+  shell: "killall {{ item }}"
+  ignore_errors: yes
+  loop:
+    - Finder
+    - Dock
+    - SystemUIServer
+    - cfprefsd

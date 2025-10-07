@@ -1,0 +1,123 @@
+---
+- name: Install MesloLGS Nerd Font
+  get_url:
+    url: "{{ item }}"
+    dest: "{{ user_home }}/Library/Fonts/"
+    mode: '0644'
+  loop:
+    - "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf"
+    - "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf"
+    - "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf"
+    - "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf"
+  ignore_errors: yes
+
+- name: Create iTerm2 preferences directory
+  file:
+    path: "{{ user_home }}/Library/Preferences"
+    state: directory
+
+- name: Configure iTerm2 preferences
+  osx_defaults:
+    domain: com.googlecode.iterm2
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+  loop:
+    # Font settings
+    - { key: "Normal Font", type: "string", value: "MesloLGS-NF-Regular 13" }
+    - { key: "Non Ascii Font", type: "string", value: "Monaco 12" }
+    
+    # Terminal behavior
+    - { key: "ApplePressAndHoldEnabled", type: "bool", value: false }
+    - { key: "AppleScrollAnimationEnabled", type: "bool", value: false }
+    - { key: "AppleSmoothFixedFontsSizeThreshold", type: "int", value: 1 }
+    - { key: "AppleAntiAliasingThreshold", type: "int", value: 1 }
+    
+    # Window and display settings
+    - { key: "AppleWindowTabbingMode", type: "string", value: "manual" }
+    - { key: "HapticFeedbackForEsc", type: "bool", value: false }
+    
+    # Terminal settings
+    - { key: "Character Encoding", type: "int", value: 4 }
+    - { key: "Terminal Type", type: "string", value: "xterm-256color" }
+    - { key: "Mouse Reporting", type: "bool", value: true }
+    - { key: "ASCII Anti Aliased", type: "bool", value: true }
+    - { key: "Non-ASCII Anti Aliased", type: "bool", value: true }
+    - { key: "Use Bold Font", type: "bool", value: true }
+    - { key: "Use Bright Bold", type: "bool", value: true }
+    - { key: "Use Italic Font", type: "bool", value: true }
+    - { key: "Draw Powerline Glyphs", type: "bool", value: true }
+    
+    # Scrollback
+    - { key: "Scrollback Lines", type: "int", value: 1000 }
+    - { key: "Unlimited Scrollback", type: "bool", value: false }
+
+- name: Set up nnn configuration
+  block:
+    - name: Create nnn config directory
+      file:
+        path: "{{ user_home }}/.config/nnn"
+        state: directory
+
+    - name: Create nnn subdirectories
+      file:
+        path: "{{ user_home }}/.config/nnn/{{ item }}"
+        state: directory
+      loop:
+        - bookmarks
+        - mounts
+        - plugins
+        - sessions
+
+    - name: Set nnn environment variables in zshrc
+      blockinfile:
+        path: "{{ user_home }}/.zshrc"
+        marker: "# {mark} ANSIBLE MANAGED NNN CONFIG"
+        block: |
+          # nnn file manager configuration
+          export NNN_PLUG='d:diffs;o:fzopen;p:mocq;z:autojump'
+          export NNN_FIFO='/tmp/nnn.fifo'
+          export NNN_COLORS='2136'
+          export NNN_FCOLORS='c1e2272e006033f7c6d6abc4'
+
+- name: Configure Ghostty terminal
+  block:
+    - name: Create Ghostty config directory
+      file:
+        path: "{{ user_home }}/.config/ghostty"
+        state: directory
+
+    - name: Create Ghostty configuration file
+      copy:
+        dest: "{{ user_home }}/.config/ghostty/config"
+        content: |
+          # Font configuration
+          font-family = "MesloLGS Nerd Font"
+          font-size = 13
+          
+          # Theme and appearance
+          theme = dark
+          background-opacity = 1.0
+          
+          # Terminal behavior
+          scrollback-limit = 10000
+          mouse-hide-while-typing = true
+          confirm-close-surface = false
+          
+          # Performance
+          macos-non-native-fullscreen = false
+          
+          # Key bindings (similar to iTerm2)
+          keybind = cmd+t=new_tab
+          keybind = cmd+w=close_surface
+          keybind = cmd+shift+left=previous_tab
+          keybind = cmd+shift+right=next_tab
+          keybind = cmd+plus=increase_font_size:1
+          keybind = cmd+minus=decrease_font_size:1
+          keybind = cmd+zero=reset_font_size
+
+- name: Restart terminals to apply font changes
+  shell: |
+    pkill -f iTerm2 || true
+    pkill -f ghostty || true
+  ignore_errors: yes

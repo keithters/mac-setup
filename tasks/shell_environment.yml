@@ -1,0 +1,77 @@
+---
+- name: Install Oh My Zsh
+  shell: sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || true
+  args:
+    creates: "{{ user_home }}/.oh-my-zsh"
+
+- name: Install Powerlevel10k theme
+  git:
+    repo: https://github.com/romkatv/powerlevel10k.git
+    dest: "{{ user_home }}/.oh-my-zsh/custom/themes/powerlevel10k"
+    depth: 1
+
+- name: Configure zsh with custom settings
+  blockinfile:
+    path: "{{ user_home }}/.zshrc"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    block: |
+      # Enable Powerlevel10k instant prompt
+      if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+        source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+      fi
+
+      # Oh My Zsh configuration
+      export ZSH="$HOME/.oh-my-zsh"
+      ZSH_THEME="powerlevel10k/powerlevel10k"
+      plugins=(git)
+      source $ZSH/oh-my-zsh.sh
+
+      # Custom aliases
+      alias python=python3
+      alias pn=pnpm
+      alias pnx='pnpm dlx '
+
+      # pnpm configuration
+      export PNPM_HOME="/Users/keith/Library/pnpm"
+      case ":$PATH:" in
+        *":$PNPM_HOME:"*) ;;
+        *) export PATH="$PNPM_HOME:$PATH" ;;
+      esac
+
+      # nnn file manager function
+      n ()
+      {
+          [ "${NNNLVL:-0}" -eq 0 ] || {
+              echo "nnn is already running"
+              return
+          }
+          export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+          command nnn "$@"
+          [ ! -f "$NNN_TMPFILE" ] || {
+              . "$NNN_TMPFILE"
+              rm -f -- "$NNN_TMPFILE" > /dev/null
+          }
+      }
+
+- name: Create p10k configuration backup
+  copy:
+    src: "{{ user_home }}/.p10k.zsh"
+    dest: "{{ user_home }}/.p10k.zsh.backup"
+    remote_src: yes
+  ignore_errors: yes
+
+- name: Ensure .zprofile exists with Homebrew path
+  blockinfile:
+    path: "{{ user_home }}/.zprofile"
+    marker: "# {mark} ANSIBLE MANAGED HOMEBREW PATH"
+    block: |
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    create: yes
+
+- name: Install node using fnm
+  shell: |
+    eval "$(fnm env --use-on-cd --shell zsh)"
+    fnm install --lts
+    fnm use lts-latest
+  args:
+    executable: /bin/zsh

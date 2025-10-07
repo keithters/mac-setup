@@ -1,0 +1,102 @@
+---
+- name: Check if Homebrew is installed
+  stat:
+    path: /opt/homebrew/bin/brew
+  register: homebrew_check
+
+- name: Install Homebrew if not present
+  shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  when: not homebrew_check.stat.exists
+
+- name: Ensure Homebrew is in PATH
+  lineinfile:
+    path: "{{ user_home }}/.zprofile"
+    line: 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+    create: yes
+
+- name: Update Homebrew
+  homebrew:
+    update_homebrew: yes
+
+- name: Install Homebrew formulae
+  homebrew:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - awscli
+    - brotli
+    - c-ares
+    - ca-certificates
+    - certifi
+    - colima
+    - coreutils
+    - emacs
+    - fnm
+    - gettext
+    - gh
+    - gmp
+    - gnutls
+    - icu4c@77
+    - libevent
+    - libidn2
+    - libnghttp2
+    - libnghttp3
+    - libngtcp2
+    - libtasn1
+    - libunistring
+    - libuv
+    - libyaml
+    - lima
+    - llm
+    - lz4
+    - mpdecimal
+    - nettle
+    - node
+    - ollama
+    - openssl@3
+    - p11-kit
+    - pipenv
+    - pipx  # For Python package management
+    - pkgconf
+    - pulumi
+    - python@3.13
+    - readline
+    - ruff   # Python linter/formatter
+    - simdjson
+    - sqlite
+    - tree-sitter
+    - unbound
+    - uv
+    - xz
+    - zstd
+    - nnn  # File manager
+
+- name: Install Homebrew casks
+  homebrew_cask:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - 1password
+    - brave-browser
+    - chatgpt
+    - claude
+    - claude-code
+    - cursor
+    - docker-desktop
+    - figma
+    - firefox
+    - ghostty
+    - google-chrome
+    - google-drive
+    - iterm2
+    - linear-linear
+    - microsoft-auto-update
+    - microsoft-teams
+    - obsidian
+    - slack
+    - spotify
+    - tableplus
+    - tower
+    - visual-studio-code
+    - whatsapp
+    - zoom

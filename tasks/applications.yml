@@ -1,0 +1,46 @@
+---
+- name: Verify key applications are installed
+  stat:
+    path: "/Applications/{{ item }}.app"
+  register: app_check
+  loop:
+    - "1Password"
+    - "Brave Browser"
+    - "ChatGPT"
+    - "Claude"
+    - "Claude Code"
+    - "Cursor"
+    - "Docker"
+    - "Figma"
+    - "Firefox"
+    - "Google Chrome"
+    - "Google Drive"
+    - "iTerm"
+    - "Linear"
+    - "Microsoft Teams"
+    - "Obsidian"
+    - "Slack"
+    - "Spotify"
+    - "TablePlus"
+    - "Tower"
+    - "Visual Studio Code"
+    - "WhatsApp"
+    - "zoom.us"
+
+- name: Display missing applications
+  debug:
+    msg: "{{ item.item }} is not installed"
+  when: not item.stat.exists
+  loop: "{{ app_check.results }}"
+
+- name: Set up application-specific configurations
+  block:
+    - name: Create iTerm2 config directory
+      file:
+        path: "{{ user_home }}/Library/Preferences"
+        state: directory
+
+    - name: Create VS Code settings directory
+      file:
+        path: "{{ user_home }}/Library/Application Support/Code/User"
+        state: directory
