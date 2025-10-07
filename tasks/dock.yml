@@ -1,37 +1,48 @@
 ---
-- name: Clear existing Dock items
-  osx_defaults:
-    domain: com.apple.dock
-    key: persistent-apps
-    type: array
-    value: []
+- name: Install dockutil for dock management
+  homebrew:
+    name: dockutil
+    state: present
+  tags: [dock]
 
-- name: Add applications to Dock
+- name: Clear existing Dock items
+  shell: dockutil --remove all --no-restart
+  ignore_errors: yes
+  tags: [dock]
+
+- name: Add applications to Dock (only if they exist)
   shell: |
-    defaults write com.apple.dock persistent-apps -array-add '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>{{ item.path }}</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>'
+    if [ -d "{{ item.path }}" ]; then
+      dockutil --add "{{ item.path }}" --no-restart
+    else
+      echo "Skipping {{ item.name }} - not found at {{ item.path }}"
+    fi
   loop:
-    - { name: "System Settings", path: "file:///System/Applications/System%20Settings.app/" }
-    - { name: "Launchpad", path: "file:///System/Applications/Launchpad.app/" }
-    - { name: "WhatsApp", path: "file:///Applications/WhatsApp.app/" }
-    - { name: "Messages", path: "file:///System/Applications/Messages.app/" }
-    - { name: "Slack", path: "file:///Applications/Slack.app/" }
-    - { name: "Zoom", path: "file:///Applications/zoom.us.app/" }
-    - { name: "iTerm", path: "file:///Applications/iTerm.app/" }
-    - { name: "Ghostty", path: "file:///Applications/Ghostty.app/" }
-    - { name: "1Password", path: "file:///Applications/1Password.app/" }
-    - { name: "Obsidian", path: "file:///Applications/Obsidian.app/" }
-    - { name: "Visual Studio Code", path: "file:///Applications/Visual%20Studio%20Code.app/" }
-    - { name: "Cursor", path: "file:///Applications/Cursor.app/" }
-    - { name: "Linear", path: "file:///Applications/Linear.app/" }
-    - { name: "TablePlus", path: "file:///Applications/TablePlus.app/" }
-    - { name: "ChatGPT", path: "file:///Applications/ChatGPT.app/" }
-    - { name: "Docker Desktop", path: "file:///Applications/Docker.app/Contents/MacOS/Docker%20Desktop.app/" }
-    - { name: "Figma", path: "file:///Applications/Figma.app/" }
-    - { name: "Firefox", path: "file:///Applications/Firefox.app/" }
-    - { name: "Google Chrome", path: "file:///Applications/Google%20Chrome.app/" }
-    - { name: "Podcasts", path: "file:///System/Applications/Podcasts.app/" }
-    - { name: "Screen Sharing", path: "file:///System/Applications/Utilities/Screen%20Sharing.app/" }
-    - { name: "Google Drive", path: "file:///Applications/Google%20Drive.app/" }
+    - { name: "System Settings", path: "/System/Applications/System Settings.app" }
+    - { name: "Launchpad", path: "/System/Applications/Launchpad.app" }
+    - { name: "WhatsApp", path: "/Applications/WhatsApp.app" }
+    - { name: "Messages", path: "/System/Applications/Messages.app" }
+    - { name: "Slack", path: "/Applications/Slack.app" }
+    - { name: "Zoom", path: "/Applications/zoom.us.app" }
+    - { name: "iTerm", path: "/Applications/iTerm.app" }
+    - { name: "Ghostty", path: "/Applications/Ghostty.app" }
+    - { name: "1Password", path: "/Applications/1Password.app" }
+    - { name: "Obsidian", path: "/Applications/Obsidian.app" }
+    - { name: "Visual Studio Code", path: "/Applications/Visual Studio Code.app" }
+    - { name: "Cursor", path: "/Applications/Cursor.app" }
+    - { name: "Linear", path: "/Applications/Linear.app" }
+    - { name: "TablePlus", path: "/Applications/TablePlus.app" }
+    - { name: "ChatGPT", path: "/Applications/ChatGPT.app" }
+    - { name: "Docker Desktop", path: "/Applications/Docker.app" }
+    - { name: "Figma", path: "/Applications/Figma.app" }
+    - { name: "Firefox", path: "/Applications/Firefox.app" }
+    - { name: "Google Chrome", path: "/Applications/Google Chrome.app" }
+    - { name: "Podcasts", path: "/System/Applications/Podcasts.app" }
+    - { name: "Screen Sharing", path: "/System/Applications/Utilities/Screen Sharing.app" }
+    - { name: "Google Drive", path: "/Applications/Google Drive.app" }
+  ignore_errors: yes
+  tags: [dock]
 
 - name: Restart Dock to apply changes
   shell: killall Dock
+  tags: [dock]

@@ -157,10 +157,10 @@ TAGS=$(echo "$TAGS" | sed 's/,$//')
 # Run the playbook
 if [[ "$FULL_SETUP" == true ]]; then
     echo -e "${GREEN}🚀 Running full Mac setup...${NC}"
-    ansible-playbook playbook.yml
+    ansible-playbook playbook.yml -v
 elif [[ -n "$TAGS" ]]; then
     echo -e "${GREEN}🚀 Running selective setup with tags: $TAGS${NC}"
-    ansible-playbook playbook.yml --tags "$TAGS"
+    ansible-playbook playbook.yml --tags "$TAGS" -v
 else
     echo -e "${RED}❌ No valid options provided${NC}"
     show_usage

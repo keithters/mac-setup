@@ -1,6 +1,6 @@
 ---
 - name: Set system preferences
-  osx_defaults:
+  community.general.osx_defaults:
     domain: "{{ item.domain }}"
     key: "{{ item.key }}"
     type: "{{ item.type }}"
@@ -26,7 +26,7 @@
     
     # Dock preferences
     - { domain: "com.apple.dock", key: "autohide", type: "bool", value: false }
-    - { domain: "com.apple.dock", key: "tilesize", type: "int", value: 48 }
+    - { domain: "com.apple.dock", key: "tilesize", type: "float", value: 48.0 }
     - { domain: "com.apple.dock", key: "minimize-to-application", type: "bool", value: true }
     - { domain: "com.apple.dock", key: "show-recents", type: "bool", value: false }
     - { domain: "com.apple.dock", key: "magnification", type: "bool", value: false }
@@ -35,14 +35,14 @@
     - { domain: "com.apple.dock", key: "launchanim", type: "bool", value: true }
     
     # Trackpad preferences
-    - { domain: "com.apple.driver.AppleBluetoothMultitouch.trackpad", key: "Clicking", type: "bool", value: true }
-    - { domain: "com.apple.AppleMultitouchTrackpad", key: "Clicking", type: "bool", value: true }
+    - { domain: "com.apple.driver.AppleBluetoothMultitouch.trackpad", key: "Clicking", type: "int", value: 1 }
+    - { domain: "com.apple.AppleMultitouchTrackpad", key: "Clicking", type: "int", value: 1 }
     - { domain: "com.apple.driver.AppleBluetoothMultitouch.trackpad", key: "TrackpadThreeFingerDrag", type: "bool", value: true }
     - { domain: "com.apple.AppleMultitouchTrackpad", key: "TrackpadThreeFingerDrag", type: "bool", value: true }
     
     # Keyboard preferences
-    - { domain: "NSGlobalDomain", key: "KeyRepeat", type: "int", value: 2 }
-    - { domain: "NSGlobalDomain", key: "InitialKeyRepeat", type: "int", value: 15 }
+    - { domain: "NSGlobalDomain", key: "KeyRepeat", type: "float", value: 2.0 }
+    - { domain: "NSGlobalDomain", key: "InitialKeyRepeat", type: "float", value: 15.0 }
     - { domain: "NSGlobalDomain", key: "NSAutomaticSpellingCorrectionEnabled", type: "bool", value: false }
     - { domain: "NSGlobalDomain", key: "NSAutomaticCapitalizationEnabled", type: "bool", value: false }
     - { domain: "NSGlobalDomain", key: "NSAutomaticPeriodSubstitutionEnabled", type: "bool", value: false }
@@ -66,11 +66,11 @@
     - { domain: "com.apple.screencapture", key: "type", type: "string", value: "png" }
     - { domain: "com.apple.screencapture", key: "disable-shadow", type: "bool", value: false }
     
-    # Safari preferences
-    - { domain: "com.apple.Safari", key: "IncludeInternalDebugMenu", type: "bool", value: true }
-    - { domain: "com.apple.Safari", key: "IncludeDevelopMenu", type: "bool", value: true }
-    - { domain: "com.apple.Safari", key: "WebKitDeveloperExtrasEnabledPreferenceKey", type: "bool", value: true }
-    - { domain: "com.apple.Safari", key: "ShowFavoritesBar", type: "bool", value: true }
+    # Safari preferences (removed due to sandboxing restrictions)
+    # - { domain: "com.apple.Safari", key: "IncludeInternalDebugMenu", type: "bool", value: true }
+    # - { domain: "com.apple.Safari", key: "IncludeDevelopMenu", type: "bool", value: true }
+    # - { domain: "com.apple.Safari", key: "WebKitDeveloperExtrasEnabledPreferenceKey", type: "bool", value: true }
+    # - { domain: "com.apple.Safari", key: "ShowFavoritesBar", type: "bool", value: true }
     
     # Activity Monitor preferences
     - { domain: "com.apple.ActivityMonitor", key: "OpenMainWindow", type: "bool", value: true }
