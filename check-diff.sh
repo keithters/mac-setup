@@ -279,6 +279,27 @@ check_pref "Auto-capitalization" "$autocaps" "0"
 check_pref "Auto-period" "$autoperiod" "0"
 check_pref "Scroll bars" "$scrollbars" "WhenScrolling"
 
+# Run Ansible check mode for comprehensive comparison
+echo -e "\n${BOLD}${CYAN}=== Ansible Dry Run Analysis ===${NC}"
+echo -e "${BLUE}🔍 Running Ansible in check mode to identify all changes...${NC}"
+
+# Run ansible in check mode to see what would actually change
+echo -e "\n${MAGENTA}📋 Detailed Ansible Analysis:${NC}"
+if command -v ansible-playbook >/dev/null 2>&1; then
+    echo -e "Running: ${CYAN}ansible-playbook playbook.yml --check --diff${NC}"
+    echo -e "${YELLOW}(This shows exactly what Ansible would change)${NC}\n"
+    
+    # Run ansible check but limit output for readability
+    ansible-playbook playbook.yml --check --diff 2>/dev/null | \
+    grep -E "(PLAY|TASK|\-\-\-|\+\+\+|changed:|ok:|skipping:)" | \
+    head -20 || echo -e "${YELLOW}⚠️  Ansible not available or playbook has syntax issues${NC}"
+    
+    echo -e "\n${BLUE}💡 For full Ansible analysis, run:${NC}"
+    echo -e "   ${CYAN}ansible-playbook playbook.yml --check --diff${NC}"
+else
+    echo -e "${YELLOW}⚠️  Ansible not installed - run ${GREEN}./run.sh${NC} to install prerequisites${NC}"
+fi
+
 # Summary and tips
 echo -e "\n${BOLD}${CYAN}💡 Tips:${NC}"
 echo -e "  • Run ${GREEN}./run.sh${NC} to apply all changes"

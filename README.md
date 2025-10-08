@@ -7,9 +7,10 @@ This Ansible playbook automates the setup of a new Mac with the same configurati
 If you're using **Claude Code**, this project includes convenient slash commands for easy workflow management. Simply type these commands in Claude to execute different parts of the setup:
 
 ### Essential Commands
-- `/check-diff` - Analyze system state and show what changes would be made (recommended first step)
-- `/run-all` - Run the complete Mac setup with all components
+- `/setup-prerequisites` - Install only prerequisites (Homebrew, Ansible, collections)
+- `/check-diff` - Analyze system state and show what changes would be made 
 - `/customize` - Learn how to ask Claude to customize your Mac setup
+- `/run-all` - Run the complete Mac setup with all components
 - `/security-review` - Review recent changes for security issues
 
 ### Selective Setup Commands
@@ -31,69 +32,6 @@ These slash commands provide a streamlined way to manage your Mac setup directly
 - Required Ansible collections
 
 Just run the script and it will handle the setup for you.
-
-## Manual Execution
-
-### Check What Would Change (Recommended First Step)
-Before running the playbook, see what changes would be made:
-```bash
-./check-diff.sh
-```
-
-### Full Setup
-Run the complete setup with all configurations:
-```bash
-./run.sh
-```
-
-### Selective Installation
-Use the run script with specific options:
-
-- Install only Homebrew packages and applications:
-  ```bash
-  ./run.sh --homebrew
-  ```
-
-- Configure only system preferences:
-  ```bash
-  ./run.sh --system
-  ```
-
-- Set up only Dock configuration:
-  ```bash
-  ./run.sh --dock
-  ```
-
-- Configure only shell environment:
-  ```bash
-  ./run.sh --shell
-  ```
-
-- Install only additional CLI tools:
-  ```bash
-  ./run.sh --cli
-  ```
-
-- Install fonts and configure terminals:
-  ```bash
-  ./run.sh --fonts
-  ```
-
-### Direct Ansible Execution
-You can also run Ansible directly with tags:
-
-```bash
-# Run specific components
-ansible-playbook playbook.yml --tags "homebrew,apps"
-ansible-playbook playbook.yml --tags "system,preferences" 
-ansible-playbook playbook.yml --tags "shell,environment"
-
-# Check syntax
-ansible-playbook --syntax-check playbook.yml
-
-# Dry run to see changes
-ansible-playbook playbook.yml --check --diff
-```
 
 ## What Gets Installed/Configured
 
@@ -235,6 +173,77 @@ dockutil --remove all
 - API keys and sensitive information in shell configuration files are excluded from this automation
 - You'll need to manually configure application-specific settings and login credentials
 - The `/security-review` command helps identify potential security issues in recent changes
+
+## Manual Execution
+
+For users who prefer command-line execution over Claude Code slash commands:
+
+### Check What Would Change (Recommended First Step)
+Before running the playbook, see what changes would be made:
+```bash
+./check-diff.sh
+```
+
+### Install Prerequisites Only
+Install just the tools needed to run the automation (Homebrew, Ansible, collections):
+```bash
+./run.sh --prerequisites
+```
+
+### Full Setup
+Run the complete setup with all configurations:
+```bash
+./run.sh
+```
+
+### Selective Installation
+Use the run script with specific options:
+
+- Install only Homebrew packages and applications:
+  ```bash
+  ./run.sh --homebrew
+  ```
+
+- Configure only system preferences:
+  ```bash
+  ./run.sh --system
+  ```
+
+- Set up only Dock configuration:
+  ```bash
+  ./run.sh --dock
+  ```
+
+- Configure only shell environment:
+  ```bash
+  ./run.sh --shell
+  ```
+
+- Install only additional CLI tools:
+  ```bash
+  ./run.sh --cli
+  ```
+
+- Install fonts and configure terminals:
+  ```bash
+  ./run.sh --fonts
+  ```
+
+### Direct Ansible Execution
+You can also run Ansible directly with tags:
+
+```bash
+# Run specific components
+ansible-playbook playbook.yml --tags "homebrew,apps"
+ansible-playbook playbook.yml --tags "system,preferences" 
+ansible-playbook playbook.yml --tags "shell,environment"
+
+# Check syntax
+ansible-playbook --syntax-check playbook.yml
+
+# Dry run to see changes
+ansible-playbook playbook.yml --check --diff
+```
 
 ## License
 

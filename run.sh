@@ -78,6 +78,7 @@ show_usage() {
     echo ""
     echo "Options:"
     echo "  --full, -f          Run complete setup (default)"
+    echo "  --prerequisites, -p Install only prerequisites (Homebrew, Ansible, collections)"
     echo "  --homebrew, -h      Install only Homebrew packages and apps"
     echo "  --system, -s        Configure only system preferences"
     echo "  --dock, -d          Set up only Dock configuration"
@@ -89,6 +90,7 @@ show_usage() {
     echo ""
     echo "Examples:"
     echo "  $0                  # Full setup"
+    echo "  $0 --prerequisites  # Install Homebrew, Ansible, collections only"
     echo "  $0 --diff           # See what changes would be made"
     echo "  $0 --homebrew       # Install apps only"
     echo "  $0 --system --dock  # System preferences and Dock only"
@@ -97,11 +99,17 @@ show_usage() {
 # Parse command line arguments
 TAGS=""
 FULL_SETUP=true
+PREREQUISITES_ONLY=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
         --full|-f)
             FULL_SETUP=true
+            shift
+            ;;
+        --prerequisites|-p)
+            PREREQUISITES_ONLY=true
+            FULL_SETUP=false
             shift
             ;;
         --homebrew|-h)
@@ -153,6 +161,23 @@ done
 
 # Remove trailing comma from tags
 TAGS=$(echo "$TAGS" | sed 's/,$//')
+
+# Handle prerequisites-only mode
+if [[ "$PREREQUISITES_ONLY" == true ]]; then
+    echo -e "${GREEN}✅ Prerequisites installation completed!${NC}"
+    echo ""
+    echo -e "${YELLOW}📝 Prerequisites ready:${NC}"
+    echo "• Homebrew installed and updated"
+    echo "• Python available"  
+    echo "• Ansible installed"
+    echo "• Ansible collections installed"
+    echo ""
+    echo -e "${BLUE}💡 Next steps:${NC}"
+    echo "• Run './run.sh' for complete Mac setup"
+    echo "• Run './check-diff.sh' to see what would change"
+    echo "• Run './run.sh --help' to see all options"
+    exit 0
+fi
 
 # Run the playbook
 if [[ "$FULL_SETUP" == true ]]; then
