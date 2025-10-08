@@ -4,23 +4,21 @@ This Ansible playbook automates the setup of a Mac (fresh or existing) with a de
 
 ## Quick Installation
 
-### One-Line Install (Recommended)
+Get started in seconds with these one-line commands. No need to clone the repository first.
 
-**Just clone the repository:**
+### See What Would Change First (Recommended)
 ```bash
-curl -fsSL https://raw.githubusercontent.com/keithters/mac-setup/main/install.sh | bash
+# Just see what would change (dry run)
+curl -fsSL https://raw.githubusercontent.com/keithters/mac-setup/main/install.sh | bash -s -- --check-diff
 ```
 
-**Advanced options:**
+### One-Line Setup Options
 ```bash
 # Install prerequisites only
 curl -fsSL https://raw.githubusercontent.com/keithters/mac-setup/main/install.sh | bash -s -- --prerequisites
 
 # Full automated setup (clone + install everything)
 curl -fsSL https://raw.githubusercontent.com/keithters/mac-setup/main/install.sh | bash -s -- --full
-
-# Just see what would change
-curl -fsSL https://raw.githubusercontent.com/keithters/mac-setup/main/install.sh | bash -s -- --check-diff
 ```
 
 ## Manual Clone and Customization
@@ -52,15 +50,6 @@ If you're using **Claude Code**, this project includes convenient slash commands
 
 These slash commands provide a streamlined way to manage your Mac setup directly through Claude Code, with progress tracking and detailed output.
 
-## Prerequisites
-
-**None!** The `run.sh` script will automatically install everything needed:
-- Homebrew (if not already installed)
-- Python (if not already installed) 
-- Ansible (via Homebrew)
-- Required Ansible collections
-
-Just run the script and it will handle the setup for you.
 
 ## What Gets Installed/Configured
 
