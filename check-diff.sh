@@ -87,15 +87,15 @@ brew list --cask 2>/dev/null > "$current_casks" || touch "$current_casks"
 
 # Target packages from YAML files
 if [[ -f "tasks/homebrew.yml" ]]; then
-    # Extract formulae from homebrew.yml
-    grep -A 100 "Install Homebrew formulae" tasks/homebrew.yml | \
+    # Extract formulae from homebrew.yml (stop before casks section)
+    sed -n '/Install Homebrew formulae/,/Install Homebrew casks/p' tasks/homebrew.yml | \
     grep "    - " | \
     sed 's/.*- //' | \
     sed 's/ *#.*//' | \
     grep -v "^$" > "$target_formulae" || touch "$target_formulae"
     
-    # Extract casks from homebrew.yml  
-    grep -A 100 "Install Homebrew casks" tasks/homebrew.yml | \
+    # Extract casks from homebrew.yml (from casks section to end)
+    sed -n '/Install Homebrew casks/,$p' tasks/homebrew.yml | \
     grep "    - " | \
     sed 's/.*- //' | \
     sed 's/ *#.*//' | \
