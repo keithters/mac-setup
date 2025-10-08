@@ -4,7 +4,7 @@ description: Install Homebrew packages and applications
 
 **🍺 Package Installation** - Install development tools and applications via Homebrew:
 
-!./run.sh --homebrew
+!timeout:600000 ./run.sh --homebrew
 
 This will install:
 - **CLI Tools**: awscli, gh, neovim, ruff, fnm, pipx, tree-sitter, nnn, etc.

@@ -4,7 +4,7 @@ description: Run complete Mac setup with all components
 
 **🚀 Complete Mac Setup** - This will configure your entire Mac development environment:
 
-!./run.sh
+!timeout:600000 ./run.sh
 
 This automation will:
 - 🍺 Install Homebrew and 50+ development tools
