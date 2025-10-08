@@ -67,7 +67,7 @@ These slash commands provide a streamlined way to manage your Mac setup directly
 - **Code Quality**: Ruff (Python linter/formatter)
 - **Container Support**: Colima, Lima
 - **AI/ML Tools**: Ollama, LLM
-- **System Utilities**: coreutils, tree-sitter, emacs, nnn file manager
+- **System Utilities**: coreutils, tree-sitter, emacs, nnn file manager, ytop (system monitor), glow (markdown renderer)
 - **Editor Integration**: CLI tools for VS Code and Cursor
 
 ### System Preferences

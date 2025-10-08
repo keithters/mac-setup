@@ -75,7 +75,9 @@
     - unbound
     - uv
     - xz
+    - ytop
     - zstd
+    - glow  # Markdown renderer
     - nnn  # File manager
 
 - name: Install Homebrew casks
