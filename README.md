@@ -61,7 +61,7 @@ These slash commands provide a streamlined way to manage your Mac setup directly
 - **Media**: Spotify, Google Drive
 
 ### Command Line Tools
-- **Cloud & Infrastructure**: AWS CLI, Pulumi, Docker, kubectl
+- **Cloud & Infrastructure**: AWS CLI, Terraform, Pulumi, Docker, kubectl
 - **Development**: GitHub CLI, Node.js (via fnm), Python, UV, Pipenv, Pipx
 - **Package Management**: pnpm (with `pn` alias for quick access)
 - **Code Quality**: Ruff (Python linter/formatter)
