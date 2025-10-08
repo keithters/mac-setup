@@ -1,6 +1,6 @@
 # Mac Setup with Ansible + Claude Code
 
-This Ansible playbook automates the setup of a new Mac with the same configuration as your current system, including applications, system preferences, Dock configuration, and command-line tools.
+This Ansible playbook automates the setup of a Mac (fresh or existing) with a development environment, including applications, system preferences, Dock layout, and command-line tools. It will not uninstall anything, but will change your Dock layout and system preferences unless customized. See [what gets installed](#what-gets-installedconfigured) for the complete list, or [learn how to customize](#manual-clone-and-customization) with Claude Code.
 
 ## Quick Installation
 
