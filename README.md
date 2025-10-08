@@ -9,6 +9,7 @@ If you're using **Claude Code**, this project includes convenient slash commands
 ### Essential Commands
 - `/check-diff` - Analyze system state and show what changes would be made (recommended first step)
 - `/run-all` - Run the complete Mac setup with all components
+- `/customize` - Learn how to ask Claude to customize your Mac setup
 - `/security-review` - Review recent changes for security issues
 
 ### Selective Setup Commands
@@ -139,6 +140,16 @@ ansible-playbook playbook.yml --check --diff
 Recreates a clean Dock layout with all your essential applications in a logical order, using `dockutil` for reliable configuration.
 
 ## Customization
+
+### Easy Customization with Claude (Recommended)
+If you're using **Claude Code**, simply run `/customize` to see examples of how to ask Claude to modify your setup in plain English. No need to edit YAML files manually!
+
+Examples:
+- *"Can you add Discord to the dock?"*
+- *"I want all browsers at the top of the dock"*
+- *"Can you remove Spotify from the setup?"*
+
+### Manual Customization
 
 ### Adding Applications
 Edit `tasks/homebrew.yml` and add to the appropriate loop section (formulae for CLI tools, casks for GUI apps).
