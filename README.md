@@ -2,18 +2,47 @@
 
 This Ansible playbook automates the setup of a new Mac with the same configuration as your current system, including applications, system preferences, Dock configuration, and command-line tools.
 
-## Claude Code Slash Commands (Recommended)
+## Quick Installation
+
+### One-Line Install (Recommended)
+
+**Just clone the repository:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/keithters/mac-setup/main/install.sh | bash
+```
+
+**Advanced options:**
+```bash
+# Install prerequisites only
+curl -fsSL https://raw.githubusercontent.com/keithters/mac-setup/main/install.sh | bash -s -- --prerequisites
+
+# Full automated setup (clone + install everything)
+curl -fsSL https://raw.githubusercontent.com/keithters/mac-setup/main/install.sh | bash -s -- --full
+
+# Just see what would change
+curl -fsSL https://raw.githubusercontent.com/keithters/mac-setup/main/install.sh | bash -s -- --check-diff
+```
+
+## Manual Clone and Customization
+
+### Clone the Repository
+```bash
+git clone https://github.com/keithters/mac-setup.git
+cd mac-setup
+```
+
+### Claude Code Slash Commands (For Customization)
 
 If you're using **Claude Code**, this project includes convenient slash commands for easy workflow management. Simply type these commands in Claude to execute different parts of the setup:
 
-### Essential Commands
+#### Essential Commands
 - `/setup-prerequisites` - Install only prerequisites (Homebrew, Ansible, collections)
 - `/check-diff` - Analyze system state and show what changes would be made 
 - `/customize` - Learn how to ask Claude to customize your Mac setup
 - `/run-all` - Run the complete Mac setup with all components
 - `/security-review` - Review recent changes for security issues
 
-### Selective Setup Commands
+#### Selective Setup Commands
 - `/run-homebrew` - Install Homebrew packages only
 - `/run-system` - Configure macOS system preferences only  
 - `/run-shell` - Configure shell environment only
@@ -45,6 +74,7 @@ Just run the script and it will handle the setup for you.
 ### Command Line Tools
 - **Cloud & Infrastructure**: AWS CLI, Pulumi, Docker, kubectl
 - **Development**: GitHub CLI, Node.js (via fnm), Python, UV, Pipenv, Pipx
+- **Package Management**: pnpm (with `pn` alias for quick access)
 - **Code Quality**: Ruff (Python linter/formatter)
 - **Container Support**: Colima, Lima
 - **AI/ML Tools**: Ollama, LLM
@@ -64,9 +94,9 @@ Just run the script and it will handle the setup for you.
 
 ### Shell Environment
 - Oh My Zsh with Powerlevel10k theme
-- Custom aliases and functions (including `n()` for nnn file manager)
+- Custom aliases and functions (including `n()` for nnn file manager, `pn` for pnpm)
 - Node.js version management with fnm
-- pnpm package manager configuration
+- pnpm package manager with optimized configuration
 
 ### Terminal & Fonts
 - **iTerm2 Configuration**: Font, colors, and behavior settings

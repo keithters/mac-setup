@@ -63,6 +63,7 @@
     - pipenv
     - pipx  # For Python package management
     - pkgconf
+    - pnpm  # Fast, disk space efficient package manager
     - pulumi
     - python@3.13
     - readline

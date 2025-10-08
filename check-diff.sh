@@ -208,6 +208,7 @@ check_shell_item "P10k configuration" "[[ -f ~/.p10k.zsh ]]"
 check_shell_item "Python alias" "grep -q 'alias python=python3' ~/.zshrc 2>/dev/null"
 check_shell_item "nnn function" "grep -q 'n ()' ~/.zshrc 2>/dev/null"
 check_shell_item "pnpm configuration" "grep -q 'PNPM_HOME' ~/.zshrc 2>/dev/null"
+check_shell_item "pn alias" "grep -q 'alias pn=pnpm' ~/.zshrc 2>/dev/null"
 
 # Check system preferences
 echo -e "\n${BOLD}${CYAN}=== System Preferences ===${NC}"

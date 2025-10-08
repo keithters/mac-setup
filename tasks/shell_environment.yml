@@ -15,7 +15,9 @@
     path: "{{ user_home }}/.zshrc"
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
     block: |
-      # Enable Powerlevel10k instant prompt
+      # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+      # Initialization code that may require console input (password prompts, [y/n]
+      # confirmations, etc.) must go above this block; everything else may go below.
       if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
         source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
       fi
@@ -24,48 +26,56 @@
       export ZSH="$HOME/.oh-my-zsh"
       ZSH_THEME="powerlevel10k/powerlevel10k"
       plugins=(git)
+      
+      # Disable Oh My Zsh auto-update prompts to avoid console I/O
+      DISABLE_AUTO_UPDATE="true"
+      DISABLE_UPDATE_PROMPT="true"
+      
       source $ZSH/oh-my-zsh.sh
 
-      # Custom aliases
-      alias python=python3
-      alias pn=pnpm
-      alias pnx='pnpm dlx '
-      
-      # Editor environment variable
+      # Environment variables (safe for instant prompt)
       export EDITOR='nvim'
-      
-      # vim function to properly override system vim
-      vim() {
-        nvim "$@"
-      }
-
-      # pnpm configuration
       export PNPM_HOME="$HOME/Library/pnpm"
+      
+      # PATH modifications (safe for instant prompt)
       case ":$PATH:" in
         *":$PNPM_HOME:"*) ;;
         *) export PATH="$PNPM_HOME:$PATH" ;;
       esac
 
-      # fnm (Fast Node Manager) initialization
-      eval "$(fnm env --use-on-cd --shell zsh)"
+      # Custom aliases (safe for instant prompt)
+      alias python=python3
+      alias pn=pnpm
+      alias pnx='pnpm dlx '
       
-      # Auto-use default Node.js version if no project-specific version
-      if command -v fnm > /dev/null && [[ ! -f .node-version && ! -f .nvmrc ]]; then
-        fnm use default --silent-if-unchanged 2>/dev/null || true
+      # Functions (safe for instant prompt)
+      vim() {
+        nvim "$@"
+      }
+
+      # fnm (Fast Node Manager) initialization - silent to avoid console I/O
+      if command -v fnm > /dev/null 2>&1; then
+        eval "$(fnm env --use-on-cd --shell zsh)"
+        
+        # Auto-use default Node.js version if no project-specific version
+        # Use silent flags to prevent console output
+        if [[ ! -f .node-version && ! -f .nvmrc ]]; then
+          fnm use default --silent-if-unchanged >/dev/null 2>&1 || true
+        fi
       fi
 
-      # nnn file manager function
+      # nnn file manager function - modified to avoid console I/O during startup
       n ()
       {
           [ "${NNNLVL:-0}" -eq 0 ] || {
-              echo "nnn is already running"
-              return
+              echo "nnn is already running" >&2
+              return 1
           }
           export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
           command nnn "$@"
           [ ! -f "$NNN_TMPFILE" ] || {
               . "$NNN_TMPFILE"
-              rm -f -- "$NNN_TMPFILE" > /dev/null
+              rm -f -- "$NNN_TMPFILE" > /dev/null 2>&1
           }
       }
   tags: [shell, environment]
