@@ -1,0 +1,202 @@
+---
+- name: Create Neovim configuration directory
+  file:
+    path: "{{ user_home }}/.config/nvim"
+    state: directory
+    mode: '0755'
+  tags: [neovim, editor]
+
+- name: Create Neovim init.lua configuration
+  copy:
+    dest: "{{ user_home }}/.config/nvim/init.lua"
+    content: |
+      -- Neovim Configuration
+      -- Basic settings
+      vim.opt.number = true                    -- Show line numbers
+      vim.opt.relativenumber = true           -- Show relative line numbers
+      vim.opt.tabstop = 2                     -- Tab width
+      vim.opt.shiftwidth = 2                  -- Indent width
+      vim.opt.expandtab = true                -- Use spaces instead of tabs
+      vim.opt.autoindent = true               -- Auto indent
+      vim.opt.smartindent = true              -- Smart indent
+      vim.opt.wrap = false                    -- Don't wrap lines
+      vim.opt.ignorecase = true               -- Ignore case in search
+      vim.opt.smartcase = true                -- Smart case in search
+      vim.opt.hlsearch = true                 -- Highlight search results
+      vim.opt.incsearch = true                -- Incremental search
+      vim.opt.termguicolors = true            -- Enable true colors
+      vim.opt.signcolumn = 'yes'              -- Always show sign column
+      vim.opt.updatetime = 250                -- Faster completion
+      vim.opt.timeoutlen = 300                -- Faster timeout
+      vim.opt.splitright = true               -- Split right by default
+      vim.opt.splitbelow = true               -- Split below by default
+      vim.opt.scrolloff = 8                   -- Keep 8 lines above/below cursor
+      vim.opt.sidescrolloff = 8               -- Keep 8 columns left/right of cursor
+      
+      -- Disable netrw (for nvim-tree)
+      vim.g.loaded_netrw = 1
+      vim.g.loaded_netrwPlugin = 1
+      
+      -- Set leader key
+      vim.g.mapleader = ' '
+      vim.g.maplocalleader = ' '
+      
+      -- Basic keymaps
+      vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = 'Save file' })
+      vim.keymap.set('n', '<leader>q', ':q<CR>', { desc = 'Quit' })
+      vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left window' })
+      vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to bottom window' })
+      vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to top window' })
+      vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right window' })
+      
+      -- Clear search highlights
+      vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>', { desc = 'Clear search highlights' })
+      
+      -- Better indenting
+      vim.keymap.set('v', '<', '<gv', { desc = 'Indent left and reselect' })
+      vim.keymap.set('v', '>', '>gv', { desc = 'Indent right and reselect' })
+      
+      -- Move text up and down
+      vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
+      vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
+      
+      -- Bootstrap lazy.nvim
+      local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+      if not vim.loop.fs_stat(lazypath) then
+        vim.fn.system({
+          "git",
+          "clone",
+          "--filter=blob:none",
+          "https://github.com/folke/lazy.nvim.git",
+          "--branch=stable",
+          lazypath,
+        })
+      end
+      vim.opt.rtp:prepend(lazypath)
+      
+      -- Plugin setup
+      require("lazy").setup({
+        -- Colorscheme
+        {
+          "catppuccin/nvim",
+          name = "catppuccin",
+          priority = 1000,
+          config = function()
+            vim.cmd.colorscheme "catppuccin-mocha"
+          end,
+        },
+        
+        -- File explorer
+        {
+          "nvim-tree/nvim-tree.lua",
+          dependencies = { "nvim-tree/nvim-web-devicons" },
+          config = function()
+            require("nvim-tree").setup({})
+            vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggle file explorer' })
+          end,
+        },
+        
+        -- Statusline
+        {
+          "nvim-lualine/lualine.nvim",
+          dependencies = { "nvim-tree/nvim-web-devicons" },
+          config = function()
+            require("lualine").setup({
+              options = {
+                theme = "catppuccin",
+                globalstatus = true,
+              },
+            })
+          end,
+        },
+        
+        -- Fuzzy finder
+        {
+          "nvim-telescope/telescope.nvim",
+          branch = "0.1.x",
+          dependencies = { "nvim-lua/plenary.nvim" },
+          config = function()
+            local telescope = require("telescope")
+            telescope.setup({
+              defaults = {
+                layout_config = {
+                  horizontal = { prompt_position = "top" },
+                },
+                sorting_strategy = "ascending",
+              },
+            })
+            
+            local builtin = require("telescope.builtin")
+            vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Find files' })
+            vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Live grep' })
+            vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Find buffers' })
+            vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Find help' })
+          end,
+        },
+        
+        -- Syntax highlighting
+        {
+          "nvim-treesitter/nvim-treesitter",
+          build = ":TSUpdate",
+          config = function()
+            require("nvim-treesitter.configs").setup({
+              ensure_installed = {
+                "bash", "css", "html", "javascript", "json", "lua", "markdown",
+                "python", "rust", "typescript", "yaml", "vim", "vimdoc"
+              },
+              highlight = { enable = true },
+              indent = { enable = true },
+            })
+          end,
+        },
+        
+        -- Auto pairs
+        {
+          "windwp/nvim-autopairs",
+          config = function()
+            require("nvim-autopairs").setup({})
+          end,
+        },
+        
+        -- Comments
+        {
+          "numToStr/Comment.nvim",
+          config = function()
+            require("Comment").setup()
+          end,
+        },
+        
+        -- Git integration
+        {
+          "lewis6991/gitsigns.nvim",
+          config = function()
+            require("gitsigns").setup()
+          end,
+        },
+        
+        -- Which-key (shows keybindings)
+        {
+          "folke/which-key.nvim",
+          config = function()
+            require("which-key").setup()
+          end,
+        },
+      })
+    mode: '0644'
+  tags: [neovim, editor]
+
+- name: Create nvim alias in shell
+  lineinfile:
+    path: "{{ user_home }}/.zshrc"
+    line: "alias vim='nvim'"
+    insertafter: "# Custom aliases"
+    state: present
+  tags: [neovim, editor, shell]
+
+- name: Set EDITOR environment variable to neovim
+  lineinfile:
+    path: "{{ user_home }}/.zshrc"
+    line: "export EDITOR='nvim'"
+    insertafter: "# Custom aliases"
+    state: present
+  tags: [neovim, editor, shell]
