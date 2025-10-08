@@ -1,93 +1,76 @@
 ---
-description: Learn how to customize the Mac setup for your preferences
+description: How to ask Claude to customize your Mac setup
 ---
 
-**🎨 Customization Guide**
+**🎨 Customization Made Easy**
 
-Want to tailor this Mac setup to your preferences? Here's how to modify each component:
+Want to tailor this Mac setup to your preferences? Just ask Claude! Here are example requests:
 
-## 🍺 Adding/Removing Homebrew Packages
+## 🍺 **Adding/Removing Apps**
 
-Edit `tasks/homebrew.yml`:
+**Say this to Claude:**
+- *"Can you add Slack and remove Spotify from the setup?"*
+- *"I'd like to install Discord and add it to the dock"*
+- *"Can you add the `jq` command line tool to the Homebrew packages?"*
+- *"Remove Microsoft Teams from the installation"*
 
-```yaml
-# Add CLI tools to formulae section (around line 30)
-loop:
-  - your-new-tool
-  - another-cli-tool
+## 🎯 **Organizing Your Dock**
 
-# Add GUI apps to casks section (around line 84)  
-loop:
-  - your-new-app
-  - another-application
-```
+**Say this to Claude:**
+- *"Can you move all browsers to the beginning of the dock?"*
+- *"I want all communication apps grouped together"*
+- *"Can you remove Google Drive from the dock but keep it installed?"*
+- *"Add Notion to the dock next to Obsidian"*
 
-## ⚙️ Customizing System Preferences
+## ⚙️ **System Preferences**
 
-Edit `tasks/system_preferences.yml`:
+**Say this to Claude:**
+- *"Can you make the dock auto-hide by default?"*
+- *"I want to disable auto-correct and auto-capitalization"*
+- *"Can you set the trackpad to not require tap-to-click?"*
+- *"Change the default screenshot location to Downloads folder"*
 
-```yaml
-- name: Your custom preference
-  community.general.osx_defaults:
-    domain: com.apple.example    # App domain
-    key: YourPreferenceKey       # Setting key
-    type: bool                   # bool, int, float, string
-    value: true                  # Your desired value
-```
+## 🐚 **Shell & Terminal**
 
-## 🎯 Modifying Dock Layout
+**Say this to Claude:**
+- *"Can you add an alias for `ll` to run `ls -la`?"*
+- *"I want to add a custom environment variable for my API key"*
+- *"Can you change the default Node.js version to 18 instead of LTS?"*
 
-Edit `tasks/dock.yml` and change the `dock_items` list:
+## 📝 **Development Tools**
 
-```yaml
-dock_items:
-  - "Your Preferred App"
-  - "Another App"
-  - "Third App"
-  # Apps will appear in this order
-```
+**Say this to Claude:**
+- *"Can you add the Vim plugin for better syntax highlighting?"*
+- *"I want to install Python 3.11 specifically"*
+- *"Can you add Postman to the development tools?"*
 
-## 🐚 Shell Environment Changes
+## 💬 **Communication**
 
-Edit `tasks/shell_environment.yml` around line 29 for aliases:
+**Say this to Claude:**
+- *"Can you replace Teams with Discord?"*
+- *"I want to add Telegram to the communication apps"*
+- *"Remove Zoom from the dock but keep it installed"*
 
-```yaml
-# Custom aliases  
-alias your-alias='your-command'
-alias shortcut='long-command-here'
+## 🎵 **Media & Creative**
 
-# Environment variables
-export YOUR_VAR='your-value'
-```
+**Say this to Claude:**
+- *"Can you add Adobe Creative Suite apps?"*
+- *"I want VLC player in the media section"*
+- *"Add Screen Studio next to other video tools"*
 
-## 📝 Neovim Configuration
+## 🔧 **After Requesting Changes**
 
-The Neovim config is in `tasks/shell_environment.yml` (lines 157-272). Modify the Lua configuration:
+Claude will:
+1. ✅ **Make the changes** to the configuration files
+2. ✅ **Test the syntax** to ensure it's valid
+3. ✅ **Tell you what changed** and which command to run
+4. ✅ **Commit the changes** to git if you ask
 
-```lua
--- Add your preferred plugins to the lazy.nvim setup
-{
-  "your/preferred-plugin",
-  config = function()
-    -- Plugin configuration
-  end,
-},
-```
+## 💡 **Pro Tips**
 
-## 🔧 Testing Your Changes
+- **Be specific**: Instead of "add some apps", say "add Discord, Notion, and VLC"
+- **Mention preferences**: "I want browsers at the top" or "group communication apps"
+- **Ask for explanations**: "What does this system preference do?"
+- **Request testing**: "Can you run `/check-diff` first to show what will change?"
 
-After making changes:
-
-1. **Check syntax**: `ansible-playbook --syntax-check playbook.yml`
-2. **Preview changes**: `/check-diff`  
-3. **Test specific component**: `./run.sh --shell` (for shell changes)
-4. **Apply changes**: `/run-all`
-
-## 💡 Pro Tips
-
-- **Always test first**: Use `/check-diff` before applying changes
-- **Backup important settings**: The automation backs up `.p10k.zsh` automatically
-- **Run selectively**: Use flags like `--homebrew`, `--shell`, `--system` to test individual changes
-- **Keep it idempotent**: Ensure changes can be run multiple times safely
-
-Need inspiration? Check the existing task files to see how different components are configured!
+Just ask Claude in plain English - no need to learn YAML or Ansible! 🤖✨

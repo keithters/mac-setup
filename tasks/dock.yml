@@ -18,29 +18,48 @@
       echo "Skipping {{ item.name }} - not found at {{ item.path }}"
     fi
   loop:
+    # System & Launcher
     - { name: "System Settings", path: "/System/Applications/System Settings.app" }
     - { name: "Launchpad", path: "/System/Applications/Launchpad.app" }
-    - { name: "WhatsApp", path: "/Applications/WhatsApp.app" }
+    
+    # Communication & Meetings
     - { name: "Messages", path: "/System/Applications/Messages.app" }
+    - { name: "WhatsApp", path: "/Applications/WhatsApp.app" }
     - { name: "Slack", path: "/Applications/Slack.app" }
     - { name: "Zoom", path: "/Applications/zoom.us.app" }
+    
+    # Terminals
     - { name: "iTerm", path: "/Applications/iTerm.app" }
     - { name: "Ghostty", path: "/Applications/Ghostty.app" }
-    - { name: "1Password", path: "/Applications/1Password.app" }
-    - { name: "Obsidian", path: "/Applications/Obsidian.app" }
+    
+    # Code Editors
     - { name: "Visual Studio Code", path: "/Applications/Visual Studio Code.app" }
     - { name: "Cursor", path: "/Applications/Cursor.app" }
-    - { name: "Linear", path: "/Applications/Linear.app" }
-    - { name: "TablePlus", path: "/Applications/TablePlus.app" }
-    - { name: "ChatGPT", path: "/Applications/ChatGPT.app" }
+    
+    # Development Tools
     - { name: "Docker Desktop", path: "/Applications/Docker.app" }
+    - { name: "TablePlus", path: "/Applications/TablePlus.app" }
+    
+    # Project Management
+    - { name: "Linear", path: "/Applications/Linear.app" }
+    - { name: "1Password", path: "/Applications/1Password.app" }
+    
+    # AI Assistants
+    - { name: "ChatGPT", path: "/Applications/ChatGPT.app" }
+    - { name: "Claude", path: "/Applications/Claude.app" }
+    
+    # Design & Content Creation
     - { name: "Figma", path: "/Applications/Figma.app" }
     - { name: "Screen Studio", path: "/Applications/Screen Studio.app" }
+    - { name: "Obsidian", path: "/Applications/Obsidian.app" }
+    
+    # Browsers
     - { name: "Firefox", path: "/Applications/Firefox.app" }
     - { name: "Google Chrome", path: "/Applications/Google Chrome.app" }
+    
+    # Media & Utilities
     - { name: "Podcasts", path: "/System/Applications/Podcasts.app" }
-    - { name: "Screen Sharing", path: "/System/Applications/Utilities/Screen Sharing.app" }
-    - { name: "Google Drive", path: "/Applications/Google Drive.app" }
+    - { name: "Spotify", path: "/Applications/Spotify.app" }
   ignore_errors: yes
   tags: [dock]
 
