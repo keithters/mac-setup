@@ -23,13 +23,18 @@
     - mypy
   ignore_errors: yes
 
+- name: Check if uv is available
+  stat:
+    path: "{{ ansible_env.HOME }}/.local/bin/uv"
+  register: uv_exists
+
 - name: Install Python packages via pipx (fallback)
   shell: "pipx install {{ item }}"
   loop:
     - ruff
     - black
     - mypy
-  when: ansible_env.HOME + "/.local/bin/uv" is not exists
+  when: not uv_exists.stat.exists
   ignore_errors: yes
 
 - name: Ensure command line tools are in PATH
