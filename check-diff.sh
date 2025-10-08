@@ -66,32 +66,8 @@ compare_packages() {
         done < "$to_install"
     fi
     
-    if [[ -s "$extra_installed" ]]; then
-        local count=$(wc -l < "$extra_installed")
-        echo -e "\n${YELLOW}🗑️  Currently installed but NOT in playbook ($count items):${NC}"
-        head -10 "$extra_installed" | while IFS= read -r package; do
-            echo -e "  ${YELLOW}? $package${NC}"
-        done
-        local total=$(wc -l < "$extra_installed")
-        if [[ $total -gt 10 ]]; then
-            echo -e "  ${YELLOW}... and $((total - 10)) more${NC}"
-        fi
-    fi
-    
-    if [[ -s "$already_installed" ]]; then
-        local count=$(wc -l < "$already_installed")
-        echo -e "\n${BLUE}✅ Already installed ($count items):${NC}"
-        head -5 "$already_installed" | while IFS= read -r package; do
-            echo -e "  ${BLUE}= $package${NC}"
-        done
-        local total=$(wc -l < "$already_installed")
-        if [[ $total -gt 5 ]]; then
-            echo -e "  ${BLUE}... and $((total - 5)) more${NC}"
-        fi
-    fi
-    
-    if [[ ! -s "$to_install" && ! -s "$extra_installed" ]]; then
-        echo -e "${GREEN}✅ No changes needed - everything matches!${NC}"
+    if [[ ! -s "$to_install" ]]; then
+        echo -e "${GREEN}✅ No new packages to install${NC}"
     fi
     
     # Cleanup
@@ -112,14 +88,14 @@ brew list --cask 2>/dev/null > "$current_casks" || touch "$current_casks"
 # Target packages from YAML files
 if [[ -f "tasks/homebrew.yml" ]]; then
     # Extract formulae from homebrew.yml
-    grep -A 50 "Install Homebrew formulae" tasks/homebrew.yml | \
+    grep -A 100 "Install Homebrew formulae" tasks/homebrew.yml | \
     grep "    - " | \
     sed 's/.*- //' | \
     sed 's/ *#.*//' | \
     grep -v "^$" > "$target_formulae" || touch "$target_formulae"
     
     # Extract casks from homebrew.yml  
-    grep -A 50 "Install Homebrew casks" tasks/homebrew.yml | \
+    grep -A 100 "Install Homebrew casks" tasks/homebrew.yml | \
     grep "    - " | \
     sed 's/.*- //' | \
     sed 's/ *#.*//' | \
@@ -154,23 +130,10 @@ fi
 # Check Dock configuration
 echo -e "\n${BOLD}${CYAN}=== Dock Configuration ===${NC}"
 
-# Get current dock apps (simplified)
-echo -e "${MAGENTA}📋 Current Dock apps:${NC}"
-current_count=$(defaults read com.apple.dock persistent-apps 2>/dev/null | grep -c '"file-label"' || echo "0")
-echo "  Currently has $current_count applications in Dock"
-
-# Show a few example current apps
-echo "  Examples from current Dock:"
-defaults read com.apple.dock persistent-apps 2>/dev/null | \
-grep '"file-label"' | \
-head -5 | \
-sed 's/.*"file-label" = \(.*\);/    • \1/' | \
-sed 's/"//g' || echo "    Could not read current apps"
-
 # Show target dock apps  
-echo -e "\n${GREEN}📋 Target Dock apps (from playbook):${NC}"
+echo -e "${GREEN}📋 Target Dock layout (from playbook):${NC}"
 if [[ -f "tasks/dock.yml" ]]; then
-    echo "  Will be configured with these apps in order:"
+    echo "  Applications will be configured in this order:"
     grep -A 50 "Add applications to Dock" tasks/dock.yml | \
     grep '{ name:' | \
     sed 's/.*{ name: "\([^"]*\)".*/    • \1/' | \
@@ -178,7 +141,7 @@ if [[ -f "tasks/dock.yml" ]]; then
     
     target_count=$(grep -A 50 "Add applications to Dock" tasks/dock.yml | \
     grep -c '{ name:')
-    echo "  Total: $target_count applications will be in Dock"
+    echo "  Total: $target_count applications + Downloads folder"
 else
     echo "  No dock.yml found"
 fi
@@ -186,7 +149,8 @@ fi
 echo -e "\n${YELLOW}🔄 Dock will be COMPLETELY RECONFIGURED${NC}"
 echo -e "    • All current apps will be removed"
 echo -e "    • Target apps will be added in specified order"
-echo -e "    • This ensures consistent Dock layout across machines"
+echo -e "    • Downloads folder will be added with list view"
+echo -e "    • Ensures consistent Dock layout across machines"
 
 # Check shell configuration
 echo -e "\n${BOLD}${CYAN}=== Shell Configuration ===${NC}"
