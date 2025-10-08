@@ -68,7 +68,7 @@ These slash commands provide a streamlined way to manage your Mac setup directly
 - **Container Support**: Colima, Lima
 - **AI/ML Tools**: Ollama, LLM
 - **System Utilities**: coreutils, tree-sitter, emacs, nnn file manager
-- **Editor Integration**: CLI tools for VS Code and Cursor
+- **Editor Integration**: CLI tools for VS Code and Cursor, Neovim (configured and aliased as `vim`)
 
 ### System Preferences
 - **Finder**: Show hidden files, path bar, status bar, list view, home folder as default, disable extension warnings, show POSIX path in title
