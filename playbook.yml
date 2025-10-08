@@ -33,3 +33,7 @@
     - name: Include fonts and terminal configuration tasks
       include_tasks: tasks/fonts_and_terminals.yml
       tags: [fonts, terminals, iterm, ghostty]
+    
+    - name: Include Neovim configuration tasks
+      include_tasks: tasks/neovim.yml
+      tags: [neovim, editor]

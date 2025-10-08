@@ -3,25 +3,30 @@
   stat:
     path: /opt/homebrew/bin/brew
   register: homebrew_check
+  tags: [homebrew]
 
 - name: Install Homebrew if not present
   shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   when: not homebrew_check.stat.exists
+  tags: [homebrew]
 
 - name: Ensure Homebrew is in PATH
   lineinfile:
     path: "{{ user_home }}/.zprofile"
     line: 'eval "$(/opt/homebrew/bin/brew shellenv)"'
     create: yes
+  tags: [homebrew]
 
 - name: Update Homebrew
   homebrew:
     update_homebrew: yes
+  tags: [homebrew]
 
 - name: Install Homebrew formulae
   homebrew:
     name: "{{ item }}"
     state: present
+  tags: [homebrew]
   loop:
     - awscli
     - brotli
@@ -51,7 +56,7 @@
     - lz4
     - mpdecimal
     - nettle
-    - node
+    - neovim
     - ollama
     - openssl@3
     - p11-kit
@@ -75,6 +80,7 @@
   homebrew_cask:
     name: "{{ item }}"
     state: present
+  tags: [homebrew]
   loop:
     - 1password
     - brave-browser

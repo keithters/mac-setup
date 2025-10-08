@@ -30,6 +30,14 @@
       alias python=python3
       alias pn=pnpm
       alias pnx='pnpm dlx '
+      
+      # Editor environment variable
+      export EDITOR='nvim'
+      
+      # vim function to properly override system vim
+      vim() {
+        nvim "$@"
+      }
 
       # pnpm configuration
       export PNPM_HOME="/Users/keith/Library/pnpm"
@@ -37,6 +45,14 @@
         *":$PNPM_HOME:"*) ;;
         *) export PATH="$PNPM_HOME:$PATH" ;;
       esac
+
+      # fnm (Fast Node Manager) initialization
+      eval "$(fnm env --use-on-cd --shell zsh)"
+      
+      # Auto-use default Node.js version if no project-specific version
+      if command -v fnm > /dev/null && [[ ! -f .node-version && ! -f .nvmrc ]]; then
+        fnm use default --silent-if-unchanged 2>/dev/null || true
+      fi
 
       # nnn file manager function
       n ()
@@ -52,6 +68,7 @@
               rm -f -- "$NNN_TMPFILE" > /dev/null
           }
       }
+  tags: [shell, environment]
 
 - name: Create p10k configuration backup
   copy:
@@ -68,10 +85,190 @@
       eval "$(/opt/homebrew/bin/brew shellenv)"
     create: yes
 
-- name: Install node using fnm
+- name: Remove Homebrew-managed Node.js (if present)
+  homebrew:
+    name: node
+    state: absent
+  ignore_errors: yes
+  tags: [shell, environment]
+
+- name: Check for Node.js conflicts before fnm setup
+  shell: >
+    echo "=== Node.js Installation Analysis ===" &&
+    if command -v node >/dev/null 2>&1; then
+      echo "Found existing Node.js at: $(which node)" &&
+      echo "Version: $(node --version)";
+    else
+      echo "No existing Node.js installation found";
+    fi &&
+    if command -v fnm >/dev/null 2>&1; then
+      echo "fnm is available for Node.js management";
+    else
+      echo "fnm not found";
+    fi
+  args:
+    executable: /bin/zsh
+  ignore_errors: yes
+  tags: [shell, environment]
+
+- name: Install and configure Node.js using fnm
   shell: |
     eval "$(fnm env --use-on-cd --shell zsh)"
     fnm install --lts
     fnm use lts-latest
+    fnm default lts-latest
   args:
     executable: /bin/zsh
+  tags: [shell, environment]
+
+- name: Verify fnm-only Node.js setup
+  shell: >
+    eval "$(fnm env --use-on-cd --shell zsh)" &&
+    if command -v node >/dev/null 2>&1; then
+      NODE_PATH=$(which node) &&
+      NODE_VERSION=$(node --version) &&
+      echo "✅ Node.js verified: $NODE_VERSION at $NODE_PATH" &&
+      if [[ "$NODE_PATH" == *fnm* ]]; then
+        echo "✅ SUCCESS: Node.js is managed by fnm" &&
+        echo "🎉 fnm-only Node.js setup verified!";
+      else
+        echo "❌ ERROR: Node.js is NOT fnm-managed (path: $NODE_PATH)" &&
+        exit 1;
+      fi;
+    else
+      echo "❌ ERROR: Node.js not available after fnm setup" &&
+      exit 1;
+    fi
+  args:
+    executable: /bin/zsh
+  ignore_errors: yes
+  tags: [shell, environment]
+
+- name: Create Neovim configuration directory
+  file:
+    path: "{{ user_home }}/.config/nvim"
+    state: directory
+    mode: '0755'
+  tags: [shell, environment, neovim]
+
+- name: Create basic Neovim configuration
+  copy:
+    dest: "{{ user_home }}/.config/nvim/init.lua"
+    content: |
+      -- Neovim Configuration
+      -- Basic settings
+      vim.opt.number = true
+      vim.opt.relativenumber = true
+      vim.opt.tabstop = 2
+      vim.opt.shiftwidth = 2
+      vim.opt.expandtab = true
+      vim.opt.autoindent = true
+      vim.opt.smartindent = true
+      vim.opt.wrap = false
+      vim.opt.ignorecase = true
+      vim.opt.smartcase = true
+      vim.opt.hlsearch = true
+      vim.opt.incsearch = true
+      vim.opt.termguicolors = true
+      vim.opt.signcolumn = 'yes'
+      vim.opt.updatetime = 250
+      vim.opt.timeoutlen = 300
+      vim.opt.splitright = true
+      vim.opt.splitbelow = true
+      vim.opt.scrolloff = 8
+      vim.opt.sidescrolloff = 8
+      
+      -- Set leader key
+      vim.g.mapleader = ' '
+      vim.g.maplocalleader = ' '
+      
+      -- Basic keymaps
+      vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = 'Save file' })
+      vim.keymap.set('n', '<leader>q', ':q<CR>', { desc = 'Quit' })
+      vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left window' })
+      vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to bottom window' })
+      vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to top window' })
+      vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right window' })
+      vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>', { desc = 'Clear search highlights' })
+      vim.keymap.set('v', '<', '<gv', { desc = 'Indent left and reselect' })
+      vim.keymap.set('v', '>', '>gv', { desc = 'Indent right and reselect' })
+      
+      -- Bootstrap lazy.nvim plugin manager
+      local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+      if not vim.loop.fs_stat(lazypath) then
+        vim.fn.system({
+          "git", "clone", "--filter=blob:none",
+          "https://github.com/folke/lazy.nvim.git",
+          "--branch=stable", lazypath,
+        })
+      end
+      vim.opt.rtp:prepend(lazypath)
+      
+      -- Plugin setup with lazy.nvim
+      require("lazy").setup({
+        -- Colorscheme
+        {
+          "catppuccin/nvim",
+          name = "catppuccin",
+          priority = 1000,
+          config = function()
+            vim.cmd.colorscheme "catppuccin-mocha"
+          end,
+        },
+        
+        -- File explorer
+        {
+          "nvim-tree/nvim-tree.lua",
+          dependencies = { "nvim-tree/nvim-web-devicons" },
+          config = function()
+            vim.g.loaded_netrw = 1
+            vim.g.loaded_netrwPlugin = 1
+            require("nvim-tree").setup({})
+            vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggle file explorer' })
+          end,
+        },
+        
+        -- Statusline
+        {
+          "nvim-lualine/lualine.nvim",
+          dependencies = { "nvim-tree/nvim-web-devicons" },
+          config = function()
+            require("lualine").setup({
+              options = { theme = "catppuccin" },
+            })
+          end,
+        },
+        
+        -- Fuzzy finder
+        {
+          "nvim-telescope/telescope.nvim",
+          dependencies = { "nvim-lua/plenary.nvim" },
+          config = function()
+            require("telescope").setup({})
+            local builtin = require("telescope.builtin")
+            vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Find files' })
+            vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Live grep' })
+            vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Find buffers' })
+          end,
+        },
+        
+        -- Syntax highlighting
+        {
+          "nvim-treesitter/nvim-treesitter",
+          build = ":TSUpdate",
+          config = function()
+            require("nvim-treesitter.configs").setup({
+              ensure_installed = { "lua", "javascript", "typescript", "python", "rust", "json", "yaml" },
+              highlight = { enable = true },
+              indent = { enable = true },
+            })
+          end,
+        },
+        
+        -- Auto pairs and comments
+        { "windwp/nvim-autopairs", config = true },
+        { "numToStr/Comment.nvim", config = true },
+        { "lewis6991/gitsigns.nvim", config = true },
+      })
+    mode: '0644'
+  tags: [shell, environment, neovim]
