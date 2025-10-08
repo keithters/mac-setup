@@ -13,24 +13,7 @@
     - corepack
   ignore_errors: yes
 
-- name: Install 1Password CLI
-  get_url:
-    url: "https://cache.agilebits.com/dist/1P/op2/pkg/v{{ op_version | default('2.32.0') }}/op_darwin_{{ 'arm64' if ansible_architecture == 'arm64' else 'amd64' }}_v{{ op_version | default('2.32.0') }}.zip"
-    dest: "/tmp/op.zip"
-    mode: '0644'
-
-- name: Extract 1Password CLI
-  unarchive:
-    src: "/tmp/op.zip"
-    dest: "/usr/local/bin/"
-    remote_src: yes
-    mode: '0755'
-    creates: "/usr/local/bin/op"
-
-- name: Clean up 1Password CLI download
-  file:
-    path: "/tmp/op.zip"
-    state: absent
+# 1Password CLI is now installed via Homebrew
 
 - name: Install Python packages via uv (if available)
   shell: "{{ ansible_env.HOME }}/.local/bin/uv tool install {{ item }}"
@@ -69,7 +52,7 @@
         source <(kubectl completion zsh) 2>/dev/null || true
       fi
       
-      # 1Password CLI completion (if available)
+      # 1Password CLI completion (installed via Homebrew)
       if command -v op &> /dev/null; then
         eval "$(op completion zsh)" 2>/dev/null || true
       fi
