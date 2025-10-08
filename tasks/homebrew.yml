@@ -75,7 +75,7 @@
     - unbound
     - uv
     - xz
-    - ytop
+    - bpytop
     - zstd
     - glow  # Markdown renderer
     - nnn  # File manager
