@@ -57,14 +57,20 @@
         eval "$(op completion zsh)" 2>/dev/null || true
       fi
 
+- name: Create .local/bin directory for user CLI tools
+  file:
+    path: "{{ user_home }}/.local/bin"
+    state: directory
+    mode: '0755'
+
 - name: Create symlinks for CLI tools installed via GUI apps
   file:
     src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    dest: "{{ user_home }}/.local/bin/{{ item.name }}"
     state: link
     force: yes
   loop:
-    - { src: "/Applications/Cursor.app/Contents/Resources/app/bin/cursor", dest: "/usr/local/bin/cursor" }
-    - { src: "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code", dest: "/usr/local/bin/code" }
-    - { src: "/Applications/Ghostty.app/Contents/MacOS/ghostty", dest: "/usr/local/bin/ghostty" }
+    - { name: "cursor", src: "/Applications/Cursor.app/Contents/Resources/app/bin/cursor" }
+    - { name: "code", src: "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" }
+    - { name: "ghostty", src: "/Applications/Ghostty.app/Contents/MacOS/ghostty" }
   ignore_errors: yes
