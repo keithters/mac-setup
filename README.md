@@ -68,12 +68,12 @@ These slash commands provide a streamlined way to manage your Mac setup directly
 - **Container Support**: Colima, Lima
 - **AI/ML Tools**: Ollama, LLM
 - **System Utilities**: coreutils, tree-sitter, emacs, nnn file manager
-- **Editor Integration**: CLI tools for VS Code and Cursor, Neovim (configured and aliased as `vim`)
+- **Editor Integration**: CLI tools for VS Code and Cursor
 
 ### System Preferences
 - **Finder**: Show hidden files, path bar, status bar, list view, home folder as default, disable extension warnings, show POSIX path in title
 - **Desktop**: Show external drives, hide internal drives, show servers and removable media, require password immediately after screensaver
-- **Dock**: Auto-hide disabled, 48px tiles, minimize to app, hide recent apps, no magnification, genie minimize effect
+- **Dock**: Auto-hide disabled, 48px tiles, minimize to app, hide recent apps, no magnification, genie minimize effect, positioned at bottom
 - **Trackpad**: Tap to click, three-finger drag enabled
 - **Keyboard**: Fast key repeat, disable auto-correct/capitalization/period substitution
 - **UI/Performance**: Faster animations, expanded save/print dialogs, scroll bars when scrolling
@@ -91,10 +91,11 @@ These slash commands provide a streamlined way to manage your Mac setup directly
 - **iTerm2 Configuration**: Font, colors, and behavior settings
 - **Ghostty Configuration**: Modern terminal with same MesloLGS Nerd Font, optimized settings
 - **MesloLGS Nerd Font**: Powerline-compatible font (size 13) for both terminals
+- **Neovim**: Configuration with modern plugins, aliased as `vim`
 - **nnn File Manager**: Configured with plugins and custom settings
 
 ### Dock Configuration
-Recreates a clean Dock layout with all your essential applications in a logical order, using `dockutil` for reliable configuration.
+Recreates a clean Dock layout with all your essential applications in a logical order, plus Downloads folder with list view, using `dockutil` for reliable configuration.
 
 ## Customization
 
