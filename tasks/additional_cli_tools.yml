@@ -1,27 +1,8 @@
 ---
-- name: Install Docker CLI tools
-  get_url:
-    url: "{{ item.url }}"
-    dest: "/usr/local/bin/{{ item.name }}"
-    mode: '0755'
-  loop:
-    - { name: "docker-compose", url: "https://github.com/docker/compose/releases/latest/download/docker-compose-darwin-x86_64" }
-  when: ansible_architecture == "x86_64"
+# Docker CLI tools are now included with Docker Desktop
+# docker-compose v2 is available as "docker compose" command
 
-- name: Install Docker CLI tools (ARM64)
-  get_url:
-    url: "{{ item.url }}"
-    dest: "/usr/local/bin/{{ item.name }}"
-    mode: '0755'
-  loop:
-    - { name: "docker-compose", url: "https://github.com/docker/compose/releases/latest/download/docker-compose-darwin-aarch64" }
-  when: ansible_architecture == "arm64"
-
-- name: Install Kubernetes CLI (kubectl)
-  get_url:
-    url: "https://dl.k8s.io/release/{{ kubectl_version | default('stable') }}/bin/darwin/{{ 'arm64' if ansible_architecture == 'arm64' else 'amd64' }}/kubectl"
-    dest: "/usr/local/bin/kubectl"
-    mode: '0755'
+# kubectl is now installed via Homebrew
 
 - name: Install global npm packages
   npm:

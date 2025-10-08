@@ -78,6 +78,7 @@
     - bpytop
     - zstd
     - glow  # Markdown renderer
+    - kubectl  # Kubernetes CLI
     - nnn  # File manager
 
 - name: Install Homebrew casks
