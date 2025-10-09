@@ -15,18 +15,28 @@
 
 # 1Password CLI is now installed via Homebrew
 
-- name: Install Python packages via uv (if available)
-  shell: "{{ ansible_env.HOME }}/.local/bin/uv tool install {{ item }}"
+- name: Check if uv is available
+  shell: "which uv"
+  register: uv_check
+  ignore_errors: yes
+
+- name: Uninstall Python packages from pipx (if switching to uv)
+  shell: "pipx uninstall {{ item }}"
   loop:
     - ruff
     - black
     - mypy
+  when: uv_check.rc == 0
   ignore_errors: yes
 
-- name: Check if uv is available
-  stat:
-    path: "{{ ansible_env.HOME }}/.local/bin/uv"
-  register: uv_exists
+- name: Install Python packages via uv (if available)
+  shell: "uv tool install {{ item }}"
+  loop:
+    - ruff
+    - black
+    - mypy
+  when: uv_check.rc == 0
+  ignore_errors: yes
 
 - name: Install Python packages via pipx (fallback)
   shell: "pipx install {{ item }}"
@@ -34,7 +44,7 @@
     - ruff
     - black
     - mypy
-  when: not uv_exists.stat.exists
+  when: uv_check.rc != 0
   ignore_errors: yes
 
 - name: Ensure command line tools are in PATH
