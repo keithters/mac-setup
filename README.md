@@ -92,7 +92,7 @@ These slash commands provide a streamlined way to manage your Mac setup directly
   - `zsh-autosuggestions` - Fish-like command suggestions based on history
   - `zsh-syntax-highlighting` - Real-time syntax highlighting for commands
   - `autoenv` - Automatic environment variable loading per directory
-  - `1password` - 1Password CLI integration and completions
+  - `1password` - 1Password CLI integration and `opswd` command for copying passwords
 - **Custom aliases**: `python` → `python3`, `pn` → `pnpm`, `pnx` → `pnpm dlx`
 - **Custom functions**: `n()` for nnn file manager with cd-on-quit
 - **Package managers**: fnm for Node.js versions, pnpm for packages
