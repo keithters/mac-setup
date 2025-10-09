@@ -95,30 +95,29 @@
           font-family = MesloLGS Nerd Font
           font-size = 13
           
-          # Theme and appearance (matching iTerm2)
-          background = #fafafa
-          foreground = #101010
-          cursor-color = #000000
-          cursor-text-color = #ffffff
-          selection-background = #b3d6ff
-          selection-foreground = #000000
+          # Theme and appearance (matching iTerm2 Dark Mode)
+          background = #000000
+          foreground = #bbbbbb
+          cursor-color = #ffa500
+          selection-background = #355570
+          selection-foreground = #bbbbbb
           
-          # ANSI colors (matching iTerm2 palette)
-          palette = 0=#141414
-          palette = 1=#b53c3c
-          palette = 2=#00c200
-          palette = 3=#c7c700
-          palette = 4=#2743c8
-          palette = 5=#c040be
-          palette = 6=#00c5c7
-          palette = 7=#c7c7c7
-          palette = 8=#686868
-          palette = 9=#dd797b
-          palette = 10=#58e758
-          palette = 11=#ecec00
-          palette = 12=#a7dcff
-          palette = 13=#e17ee1
-          palette = 14=#60ffff
+          # ANSI colors (matching iTerm2 Dark Mode palette)
+          palette = 0=#4f4f4f
+          palette = 1=#ff6b6b
+          palette = 2=#a8cc8c
+          palette = 3=#dbab79
+          palette = 4=#96cdfb
+          palette = 5=#ff9cfc
+          palette = 6=#c6c5fe
+          palette = 7=#eeeeee
+          palette = 8=#7c7c7c
+          palette = 9=#ff6b6b
+          palette = 10=#a8cc8c
+          palette = 11=#dbab79
+          palette = 12=#96cdfb
+          palette = 13=#ff9cfc
+          palette = 14=#c6c5fe
           palette = 15=#ffffff
           
           # Terminal behavior
