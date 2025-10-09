@@ -78,8 +78,7 @@
     - bpytop
     - zstd
     - glow  # Markdown renderer
-    - kubectl  # Kubernetes CLI
-    - 1password-cli  # 1Password CLI (op command)
+    - kubernetes-cli  # Kubernetes CLI (kubectl command)
     - autoenv  # Directory-based environment switching
     - nnn  # File manager
 
@@ -90,6 +89,7 @@
   tags: [homebrew]
   loop:
     - 1password
+    - 1password-cli
     - brave-browser
     - chatgpt
     - claude

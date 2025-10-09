@@ -57,11 +57,11 @@ These slash commands provide a streamlined way to manage your Mac setup directly
 - **Browsers**: Brave, Firefox, Google Chrome
 - **Development**: Visual Studio Code, Cursor, iTerm2, Ghostty, Docker Desktop, TablePlus, Tower
 - **Communication**: Slack, WhatsApp, Zoom, Microsoft Teams
-- **Productivity**: 1Password, Obsidian, Linear, ChatGPT, Claude, Figma
+- **Productivity**: 1Password, 1Password CLI, Obsidian, Linear, ChatGPT, Claude, Figma
 - **Media**: Spotify, Google Drive
 
 ### Command Line Tools
-- **Cloud & Infrastructure**: AWS CLI, Terraform, Pulumi, kubectl, 1Password CLI
+- **Cloud & Infrastructure**: AWS CLI, Terraform, Pulumi, kubectl
 - **Development**: GitHub CLI, Node.js (via fnm), Python, UV, Pipenv, Pipx
 - **Package Management**: pnpm (with `pn` alias for quick access)
 - **Code Quality**: Ruff (Python linter/formatter)
