@@ -147,6 +147,8 @@ ansible-mac/
 |   `-- commands/                 # Claude Code slash commands
 |-- ansible.cfg                   # Ansible configuration
 |-- check-diff.sh                 # Analysis tool (show changes)  
+|-- files/
+|   `-- p10k.zsh                  # Powerlevel10k configuration
 |-- inventory.yml                 # Host inventory (localhost)
 |-- playbook.yml                  # Main playbook
 |-- README.md                     # This file

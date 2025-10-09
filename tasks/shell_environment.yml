@@ -22,6 +22,12 @@
     dest: "{{ user_home }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
     depth: 1
 
+- name: Install custom Powerlevel10k configuration
+  copy:
+    src: "{{ playbook_dir }}/files/p10k.zsh"
+    dest: "{{ user_home }}/.p10k.zsh"
+    mode: '0644'
+
 - name: Configure zsh with custom settings
   blockinfile:
     path: "{{ user_home }}/.zshrc"

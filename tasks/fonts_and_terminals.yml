@@ -95,9 +95,31 @@
           font-family = "MesloLGS Nerd Font"
           font-size = 13
           
-          # Theme and appearance
-          theme = dark
-          background-opacity = 1.0
+          # Theme and appearance (matching iTerm2)
+          background = fafafa
+          foreground = 101010
+          cursor-color = 000000
+          cursor-text-color = ffffff
+          selection-background = b3d6ff
+          selection-foreground = 000000
+          
+          # ANSI colors (matching iTerm2 palette)
+          palette = 0=141414  # Black
+          palette = 1=b53c3c  # Red  
+          palette = 2=00c200  # Green
+          palette = 3=c7c700  # Yellow
+          palette = 4=2743c8  # Blue
+          palette = 5=c040be  # Magenta
+          palette = 6=00c5c7  # Cyan
+          palette = 7=c7c7c7  # White
+          palette = 8=686868  # Bright Black
+          palette = 9=dd797b  # Bright Red
+          palette = 10=58e758 # Bright Green  
+          palette = 11=ecec00 # Bright Yellow
+          palette = 12=a7dcff # Bright Blue
+          palette = 13=e17ee1 # Bright Magenta
+          palette = 14=60ffff # Bright Cyan
+          palette = 15=ffffff # Bright White
           
           # Terminal behavior
           scrollback-limit = 10000
