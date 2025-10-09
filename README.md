@@ -82,10 +82,20 @@ These slash commands provide a streamlined way to manage your Mac setup directly
 - **Activity Monitor**: CPU usage sorting, Dock icon shows CPU usage
 
 ### Shell Environment
-- Oh My Zsh with Powerlevel10k theme
-- Custom aliases and functions (including `n()` for nnn file manager, `pn` for pnpm)
-- Node.js version management with fnm
-- pnpm package manager with optimized configuration
+- **Oh My Zsh**: Framework for managing zsh configuration
+- **Powerlevel10k**: Fast, feature-rich zsh theme with customizable prompt
+- **Zsh Plugins**:
+  - `git` - Git aliases and status integration
+  - `aws` - AWS CLI completion and shortcuts
+  - `fnm` - Fast Node Manager integration and completions
+  - `gh` - GitHub CLI completion and shortcuts
+  - `zsh-autosuggestions` - Fish-like command suggestions based on history
+  - `zsh-syntax-highlighting` - Real-time syntax highlighting for commands
+  - `autoenv` - Automatic environment variable loading per directory
+  - `1password` - 1Password CLI integration and completions
+- **Custom aliases**: `python` → `python3`, `pn` → `pnpm`, `pnx` → `pnpm dlx`
+- **Custom functions**: `n()` for nnn file manager with cd-on-quit
+- **Package managers**: fnm for Node.js versions, pnpm for packages
 
 ### Terminal & Fonts
 - **iTerm2 Configuration**: Font, colors, and behavior settings
