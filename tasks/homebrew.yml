@@ -80,6 +80,7 @@
     - glow  # Markdown renderer
     - kubectl  # Kubernetes CLI
     - 1password-cli  # 1Password CLI (op command)
+    - autoenv  # Directory-based environment switching
     - nnn  # File manager
 
 - name: Install Homebrew casks

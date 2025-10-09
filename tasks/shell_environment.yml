@@ -59,11 +59,7 @@
       alias python=python3
       alias pn=pnpm
       alias pnx='pnpm dlx '
-      
-      # Functions (safe for instant prompt)
-      vim() {
-        nvim "$@"
-      }
+      alias vim=nvim
 
       # fnm (Fast Node Manager) initialization - silent to avoid console I/O
       if command -v fnm > /dev/null 2>&1; then
