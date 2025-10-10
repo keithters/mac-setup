@@ -1,6 +1,10 @@
 # Mac Setup with Ansible + Claude Code
 
-This Ansible playbook automates the setup of a Mac (fresh or existing) with a development environment, including applications, system preferences, Dock layout, and command-line tools. The automation is **idempotent** - safe to run multiple times without causing issues. It will not uninstall anything, but will change your Dock layout and system preferences unless customized. See [what gets installed](#what-gets-installedconfigured) for the complete list, or [learn how to customize and run](#manual-clone-and-customization) with Claude Code.
+This Ansible playbook automates the setup of a Mac (fresh or existing) with a development environment, including applications, system preferences, Dock layout, and command-line tools. The automation is **idempotent** - safe to run multiple times without causing issues. 
+
+**🔄 Configuration Changes Are Reversible**: Shell, terminal, and most system preferences are automatically backed up before modification and can be restored. Installed applications remain on your system (not uninstalled during restore), and dock changes require manual restoration using the backup reference. 
+
+See [what gets installed](#what-gets-installedconfigured) for the complete list, or [learn how to customize and run](#manual-clone-and-customization) with Claude Code.
 
 ## Quick Installation
 
@@ -36,6 +40,8 @@ If you're using **Claude Code**, this project includes convenient slash commands
 #### Essential Commands
 - `/setup-prerequisites` - Install only prerequisites (Homebrew, Ansible, collections)
 - `/check-diff` - Analyze system state and show what changes would be made 
+- `/backup-config` - Create a manual backup of your current configuration
+- `/restore-config` - Restore from a previous backup (interactive)
 - `/customize` - Learn how to ask Claude to customize your Mac setup
 - `/run-all` - Run the complete Mac setup with all components
 - `/security-review` - Review recent changes for security issues
@@ -50,6 +56,46 @@ If you're using **Claude Code**, this project includes convenient slash commands
 
 These slash commands provide a streamlined way to manage your Mac setup directly through Claude Code, with progress tracking and detailed output.
 
+## 🔄 Backup and Restore System
+
+This setup includes comprehensive backup and restore functionality to make all changes completely reversible.
+
+### Automatic Backups
+Every time you run the setup, it automatically creates timestamped backups of:
+- **Shell configuration files** (`.zshrc`, `.zprofile`, `.p10k.zsh`) - *Fully restorable*
+- **Neovim configuration** (`~/.config/nvim/`) - *Fully restorable*
+- **Terminal preferences** (iTerm2, Ghostty) - *Fully restorable*
+- **System preferences** (Finder, Dock settings, etc.) - *Mostly restorable*
+- **Dock layout reference** - *Manual restoration required*
+- Complete restoration instructions
+
+### Manual Backup & Restore Commands
+```bash
+# Create a manual backup of your current configuration
+./backup-config.sh
+
+# Restore from any previous backup (interactive menu)
+./restore-config.sh
+```
+
+### Backup Storage
+- All backups stored in `~/.config-backups/`
+- Timestamped directories for multiple restore points
+- Each backup includes detailed restoration instructions
+- No backup data is ever overwritten
+
+### What You Can Restore
+- **Shell & Terminal Settings**: Complete rollback of shell configuration and terminal preferences
+- **System Preferences**: Most macOS system settings (some NSGlobalDomain settings may need manual work)
+- **Neovim Configuration**: Full restoration of editor setup
+- **Multiple restore points**: Access any previous backup
+- **Oh My Zsh removal**: Optional removal of zsh framework during restore
+
+### What Stays After Restore
+- **Installed Applications**: Homebrew packages and applications remain installed
+- **Dock Layout**: Must be manually restored using the saved reference file
+
+This means you can try the configuration changes risk-free - your original settings are preserved, though installed software will remain on your system (which is usually what you want).
 
 ## What Gets Installed/Configured
 

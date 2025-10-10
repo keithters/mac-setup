@@ -58,6 +58,15 @@ ansible-playbook --syntax-check playbook.yml
 ansible-playbook playbook.yml --check --diff
 ```
 
+### Backup and Restore
+```bash
+# Create manual backup of current configuration
+./backup-config.sh
+
+# Restore from a previous backup (interactive)
+./restore-config.sh
+```
+
 ### Development & Testing
 ```bash
 # Validate playbook syntax

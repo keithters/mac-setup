@@ -1,4 +1,11 @@
 ---
+# Backup current Dock configuration before modification
+- name: Export current Dock configuration
+  shell: |
+    # Create a backup of the current dock layout
+    dockutil --list > "{{ backup_dir.path | default(user_home + '/.config-backups/ansible-mac-' + ansible_date_time.epoch) }}/dock-layout-backup.txt" 2>/dev/null || echo "No existing dock items found"
+  ignore_errors: yes
+
 - name: Install dockutil for dock management
   homebrew:
     name: dockutil

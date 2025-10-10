@@ -1,4 +1,17 @@
 ---
+# Backup iTerm2 preferences before modification
+- name: Export current iTerm2 preferences
+  shell: defaults export com.googlecode.iterm2 "{{ backup_dir.path | default(user_home + '/.config-backups/ansible-mac-' + ansible_date_time.epoch) }}/iterm2-defaults.plist"
+  ignore_errors: yes
+  when: backup_dir is defined or backup_dir is not defined
+
+- name: Backup current Ghostty config
+  copy:
+    src: "{{ user_home }}/.config/ghostty/"
+    dest: "{{ backup_dir.path | default(user_home + '/.config-backups/ansible-mac-' + ansible_date_time.epoch) }}/ghostty.original/"
+    remote_src: yes
+  ignore_errors: yes
+
 - name: Install MesloLGS Nerd Font
   get_url:
     url: "{{ item }}"

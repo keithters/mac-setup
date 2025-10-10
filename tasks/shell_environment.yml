@@ -1,4 +1,97 @@
 ---
+# Backup original configuration files before modification
+- name: Create backup directory
+  file:
+    path: "{{ user_home }}/.config-backups/ansible-mac-{{ ansible_date_time.epoch }}"
+    state: directory
+    mode: '0755'
+  register: backup_dir
+
+- name: Backup original .zshrc
+  copy:
+    src: "{{ user_home }}/.zshrc"
+    dest: "{{ backup_dir.path }}/.zshrc.original"
+    remote_src: yes
+  ignore_errors: yes
+
+- name: Backup original .zprofile  
+  copy:
+    src: "{{ user_home }}/.zprofile"
+    dest: "{{ backup_dir.path }}/.zprofile.original"
+    remote_src: yes
+  ignore_errors: yes
+
+- name: Backup original .p10k.zsh
+  copy:
+    src: "{{ user_home }}/.p10k.zsh"
+    dest: "{{ backup_dir.path }}/.p10k.zsh.original"
+    remote_src: yes
+  ignore_errors: yes
+
+- name: Backup original nvim config
+  copy:
+    src: "{{ user_home }}/.config/nvim/"
+    dest: "{{ backup_dir.path }}/nvim.original/"
+    remote_src: yes
+  ignore_errors: yes
+
+- name: Create backup info file
+  copy:
+    dest: "{{ backup_dir.path }}/backup-info.txt"
+    content: |
+      Ansible Mac Setup - Configuration Backup
+      ========================================
+      Created: {{ ansible_date_time.iso8601 }}
+      Backup Directory: {{ backup_dir.path }}
+      
+      Original files backed up:
+      - .zshrc.original (FULLY RESTORABLE)
+      - .zprofile.original (FULLY RESTORABLE)
+      - .p10k.zsh.original (FULLY RESTORABLE)
+      - nvim.original/ (FULLY RESTORABLE)
+      - iterm2-defaults.plist (FULLY RESTORABLE)
+      - ghostty.original/ (FULLY RESTORABLE)
+      - system-defaults/ (MOSTLY RESTORABLE - some NSGlobalDomain settings may need manual work)
+      - dock-layout-backup.txt (REFERENCE ONLY - dock restore requires manual intervention)
+      
+      WHAT CANNOT BE AUTOMATICALLY REVERSED:
+      - Homebrew package installations (these are not removed during restore)
+      - Applications installed via Homebrew Cask (these remain installed)
+      - Dock layout changes (you'll need to manually rebuild your dock from the backup reference)
+      
+      To restore original configuration:
+      1. Use the restore script: ./restore-config.sh
+      
+      OR manually restore:
+      1. Copy backup files back to home directory:
+         cp {{ backup_dir.path }}/.zshrc.original ~/.zshrc
+         cp {{ backup_dir.path }}/.zprofile.original ~/.zprofile
+         cp {{ backup_dir.path }}/.p10k.zsh.original ~/.p10k.zsh
+         rm -rf ~/.config/nvim && cp -r {{ backup_dir.path }}/nvim.original ~/.config/nvim
+      
+      2. Restore terminal preferences:
+         defaults import com.googlecode.iterm2 {{ backup_dir.path }}/iterm2-defaults.plist
+         rm -rf ~/.config/ghostty && cp -r {{ backup_dir.path }}/ghostty.original ~/.config/ghostty
+      
+      3. Restore system preferences:
+         defaults import com.apple.finder {{ backup_dir.path }}/system-defaults/finder.plist
+         defaults import com.apple.dock {{ backup_dir.path }}/system-defaults/dock.plist
+         # (repeat for other plist files in system-defaults/)
+      
+      4. Remove Oh My Zsh installation:
+         rm -rf ~/.oh-my-zsh
+      
+      5. Manually restore dock from reference:
+         cat {{ backup_dir.path }}/dock-layout-backup.txt
+         # Use dockutil commands to rebuild your original dock
+      
+      6. Restart terminal applications and system services
+    mode: '0644'
+
+- name: Display backup location
+  debug:
+    msg: "Configuration backup created at: {{ backup_dir.path }}"
+
 - name: Install Oh My Zsh
   shell: sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || true
   args:

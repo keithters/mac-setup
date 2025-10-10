@@ -1,4 +1,20 @@
 ---
+# Backup current system preferences before modification
+- name: Export current system defaults
+  shell: |
+    # Backup key system preference domains
+    mkdir -p "{{ backup_dir.path | default(user_home + '/.config-backups/ansible-mac-' + ansible_date_time.epoch) }}/system-defaults"
+    defaults export com.apple.finder "{{ backup_dir.path | default(user_home + '/.config-backups/ansible-mac-' + ansible_date_time.epoch) }}/system-defaults/finder.plist" 2>/dev/null || true
+    defaults export com.apple.dock "{{ backup_dir.path | default(user_home + '/.config-backups/ansible-mac-' + ansible_date_time.epoch) }}/system-defaults/dock.plist" 2>/dev/null || true
+    defaults export com.apple.screensaver "{{ backup_dir.path | default(user_home + '/.config-backups/ansible-mac-' + ansible_date_time.epoch) }}/system-defaults/screensaver.plist" 2>/dev/null || true
+    defaults export com.apple.ActivityMonitor "{{ backup_dir.path | default(user_home + '/.config-backups/ansible-mac-' + ansible_date_time.epoch) }}/system-defaults/activitymonitor.plist" 2>/dev/null || true
+    defaults export com.apple.menuextra.clock "{{ backup_dir.path | default(user_home + '/.config-backups/ansible-mac-' + ansible_date_time.epoch) }}/system-defaults/clock.plist" 2>/dev/null || true
+    defaults export com.apple.menuextra.battery "{{ backup_dir.path | default(user_home + '/.config-backups/ansible-mac-' + ansible_date_time.epoch) }}/system-defaults/battery.plist" 2>/dev/null || true
+    defaults export com.apple.screencapture "{{ backup_dir.path | default(user_home + '/.config-backups/ansible-mac-' + ansible_date_time.epoch) }}/system-defaults/screencapture.plist" 2>/dev/null || true
+    # Export global domain settings to a text file (more complex to backup)
+    defaults read NSGlobalDomain > "{{ backup_dir.path | default(user_home + '/.config-backups/ansible-mac-' + ansible_date_time.epoch) }}/system-defaults/NSGlobalDomain-backup.txt" 2>/dev/null || true
+  ignore_errors: yes
+
 - name: Set system preferences
   community.general.osx_defaults:
     domain: "{{ item.domain }}"

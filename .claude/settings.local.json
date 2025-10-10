@@ -4,7 +4,10 @@
       "Bash(brew list:*)",
       "Bash(defaults read:*)",
       "Bash(chmod:*)",
-      "WebFetch(domain:docs.claude.com)"
+      "WebFetch(domain:docs.claude.com)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
