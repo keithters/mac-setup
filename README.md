@@ -139,6 +139,7 @@ This means you can try the configuration changes risk-free - your original setti
   - `zsh-syntax-highlighting` - Real-time syntax highlighting for commands
   - `autoenv` - Automatic environment variable loading per directory
   - `1password` - 1Password CLI integration and `opswd` command for copying passwords
+  - `you-should-use` - Reminds you to use aliases when available
 - **Custom aliases**: `python` → `python3`, `pn` → `pnpm`, `pnx` → `pnpm dlx`
 - **Custom functions**: `n()` for nnn file manager with cd-on-quit
 - **Package managers**: fnm for Node.js versions, pnpm for packages
