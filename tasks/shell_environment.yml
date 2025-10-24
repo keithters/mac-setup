@@ -35,6 +35,13 @@
     remote_src: yes
   ignore_errors: yes
 
+- name: Backup original .tmux.conf
+  copy:
+    src: "{{ user_home }}/.tmux.conf"
+    dest: "{{ backup_dir.path }}/.tmux.conf.original"
+    remote_src: yes
+  ignore_errors: yes
+
 - name: Create backup info file
   copy:
     dest: "{{ backup_dir.path }}/backup-info.txt"
@@ -48,6 +55,7 @@
       - .zshrc.original (FULLY RESTORABLE)
       - .zprofile.original (FULLY RESTORABLE)
       - .p10k.zsh.original (FULLY RESTORABLE)
+      - .tmux.conf.original (FULLY RESTORABLE)
       - nvim.original/ (FULLY RESTORABLE)
       - iterm2-defaults.plist (FULLY RESTORABLE)
       - ghostty.original/ (FULLY RESTORABLE)
@@ -67,6 +75,7 @@
          cp {{ backup_dir.path }}/.zshrc.original ~/.zshrc
          cp {{ backup_dir.path }}/.zprofile.original ~/.zprofile
          cp {{ backup_dir.path }}/.p10k.zsh.original ~/.p10k.zsh
+         cp {{ backup_dir.path }}/.tmux.conf.original ~/.tmux.conf
          rm -rf ~/.config/nvim && cp -r {{ backup_dir.path }}/nvim.original ~/.config/nvim
       
       2. Restore terminal preferences:
@@ -192,6 +201,12 @@
               rm -f -- "$NNN_TMPFILE" > /dev/null 2>&1
           }
       }
+
+      # Auto-start tmux on new terminal sessions
+      # Only start if we're not already in a tmux session and not in VSCode/Claude Code integrated terminal
+      if command -v tmux &> /dev/null && [ -z "$TMUX" ] && [ -z "$VSCODE_INJECTION" ] && [ -z "$TERM_PROGRAM" ]; then
+        tmux attach-session -t default || tmux new-session -s default
+      fi
   tags: [shell, environment]
 
 - name: Create p10k configuration backup
@@ -274,6 +289,13 @@
     state: directory
     mode: '0755'
   tags: [shell, environment, neovim]
+
+- name: Install tmux configuration
+  copy:
+    src: "{{ playbook_dir }}/files/tmux.conf"
+    dest: "{{ user_home }}/.tmux.conf"
+    mode: '0644'
+  tags: [shell, environment, tmux]
 
 - name: Create basic Neovim configuration
   copy:

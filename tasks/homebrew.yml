@@ -71,6 +71,7 @@
     - simdjson
     - sqlite
     - terraform
+    - tmux
     - tree-sitter
     - unbound
     - uv
